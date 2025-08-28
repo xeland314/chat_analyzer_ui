@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
-import '../src/analysis/interaction_analyzer.dart';
 import '../src/models/chat_analysis.dart';
 import '../src/models/chat_participant.dart';
 import 'chat.dart';
@@ -392,7 +391,17 @@ class _InteractionAnalysisViewState extends State<InteractionAnalysisView> {
             child: DataTable(
               columns: [
                 const DataColumn(label: Text('Replier \\ To')),
-                ...participants.map((p) => DataColumn(label: Text(p))),
+                ...participants.map(
+                  (p) => DataColumn(
+                    label: Text(
+                      p,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Noto Color Emoji',
+                      ),
+                    ),
+                  ),
+                ),
               ],
               rows: participants.map((replier) {
                 return DataRow(
@@ -400,7 +409,10 @@ class _InteractionAnalysisViewState extends State<InteractionAnalysisView> {
                     DataCell(
                       Text(
                         replier,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Noto Color Emoji',
+                        ),
                       ),
                     ),
                     ...participants.map((repliee) {
@@ -455,7 +467,10 @@ class ParticipantStatsView extends StatelessWidget {
       child: ExpansionTile(
         title: Text(
           participant.name,
-          style: Theme.of(context).textTheme.headlineSmall,
+          style: TextStyle(
+            fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+            fontFamily: 'Noto Color Emoji',
+          ),
         ),
         subtitle: Text(
           '${participant.messageCount} messages, ${participant.multimediaCount} multimedia files',
@@ -498,8 +513,9 @@ class ParticipantStatsView extends StatelessWidget {
         Text(
           'Sentiment Analysis',
           style: Theme.of(context).textTheme.titleLarge,
+          overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 40),
         SizedBox(
           height: 150,
           child: PieChart(
@@ -541,8 +557,8 @@ class ParticipantStatsView extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 8),
-        Row(
+        const SizedBox(height: 28),
+        Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildLegend(Colors.green, 'Positive: $positive'),
@@ -613,6 +629,7 @@ class _TemporalAnalysisViewState extends State<TemporalAnalysisView> {
             Text(
               'Temporal Analysis',
               style: Theme.of(context).textTheme.headlineSmall,
+              overflow: TextOverflow.ellipsis,
             ),
             if (_availableYears.length > 1) _buildYearSelector(),
           ],
@@ -663,6 +680,7 @@ class _TemporalAnalysisViewState extends State<TemporalAnalysisView> {
         Text(
           'Message Activity ($year)',
           style: Theme.of(context).textTheme.titleLarge,
+          overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 8),
         if (yearlyData.isEmpty)
@@ -731,6 +749,7 @@ class _TemporalAnalysisViewState extends State<TemporalAnalysisView> {
         Text(
           'Most Active Hours',
           style: Theme.of(context).textTheme.titleLarge,
+          overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 8),
         SizedBox(
@@ -800,6 +819,7 @@ class _TemporalAnalysisViewState extends State<TemporalAnalysisView> {
           Text(
             'Sentiment Trend ($year)',
             style: Theme.of(context).textTheme.titleLarge,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 8),
           const Padding(
@@ -830,6 +850,7 @@ class _TemporalAnalysisViewState extends State<TemporalAnalysisView> {
         Text(
           'Sentiment Trend ($year)',
           style: Theme.of(context).textTheme.titleLarge,
+          overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 8),
 
@@ -935,7 +956,6 @@ class FrequencyListView extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-              title: Text(entry.key),
               trailing: Text(
                 entry.value.toString(),
                 style: Theme.of(context).textTheme.bodyLarge,

@@ -15,7 +15,10 @@ class ChatAnalyzerApp extends StatelessWidget {
     return MaterialApp(
       title: 'Chat Analyzer',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.indigo,
+          brightness: Brightness.dark,
+        ),
         useMaterial3: true,
       ),
       home: const HomePage(),

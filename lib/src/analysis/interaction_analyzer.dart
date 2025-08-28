@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import '../models/chat_message.dart';
 
 /// Represents a block of conversation, segmented by a time threshold.
@@ -8,7 +6,8 @@ class Conversation {
 
   Conversation({required this.messages});
 
-  DateTime? get startTime => messages.isNotEmpty ? messages.first.dateTime : null;
+  DateTime? get startTime =>
+      messages.isNotEmpty ? messages.first.dateTime : null;
   DateTime? get endTime => messages.isNotEmpty ? messages.last.dateTime : null;
 
   Duration get duration {
@@ -18,9 +17,9 @@ class Conversation {
     return endTime!.difference(startTime!);
   }
 
-  List<String> get participants => messages.map((m) => m.author).toSet().toList();
+  List<String> get participants =>
+      messages.map((m) => m.author).toSet().toList();
 }
-
 
 /// Analyzes interactions within a chat, such as conversation segmentation.
 class InteractionAnalyzer {
@@ -30,8 +29,9 @@ class InteractionAnalyzer {
   double? _naturalThreshold;
 
   InteractionAnalyzer(List<ChatMessage> messages)
-      // Ensure messages are sorted by date, which is crucial for all analysis.
-      : _messages = List.from(messages)..sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    // Ensure messages are sorted by date, which is crucial for all analysis.
+    : _messages = List.from(messages)
+        ..sort((a, b) => a.dateTime.compareTo(b.dateTime));
 
   /// Estimates the natural conversation break threshold in minutes using a percentile.
   ///
@@ -48,7 +48,9 @@ class InteractionAnalyzer {
     // 1. Calculate all time gaps in minutes.
     final gapsInMinutes = <double>[];
     for (int i = 1; i < _messages.length; i++) {
-      final duration = _messages[i].dateTime.difference(_messages[i - 1].dateTime);
+      final duration = _messages[i].dateTime.difference(
+        _messages[i - 1].dateTime,
+      );
       gapsInMinutes.add(duration.inSeconds / 60.0);
     }
 
@@ -70,9 +72,10 @@ class InteractionAnalyzer {
     } else {
       // Simple linear interpolation.
       final weight = index - lower;
-      _naturalThreshold = gapsInMinutes[lower] * (1 - weight) + gapsInMinutes[upper] * weight;
+      _naturalThreshold =
+          gapsInMinutes[lower] * (1 - weight) + gapsInMinutes[upper] * weight;
     }
-    
+
     // We can round it to a reasonable number of decimal places.
     _naturalThreshold = (_naturalThreshold! * 100).round() / 100;
 
@@ -84,7 +87,9 @@ class InteractionAnalyzer {
   /// If [thresholdInMinutes] is not provided, the `estimateNaturalThreshold` is used automatically.
   List<Conversation> segmentConversations({double? thresholdInMinutes}) {
     final threshold = thresholdInMinutes ?? estimateNaturalThreshold();
-    final thresholdDuration = Duration(microseconds: (threshold * 60 * 1000 * 1000).round());
+    final thresholdDuration = Duration(
+      microseconds: (threshold * 60 * 1000 * 1000).round(),
+    );
 
     if (_messages.isEmpty) return [];
 
@@ -102,7 +107,9 @@ class InteractionAnalyzer {
 
       if (gap > thresholdDuration) {
         // Close current conversation and start a new one.
-        conversations.add(Conversation(messages: List.from(currentConversationMessages)));
+        conversations.add(
+          Conversation(messages: List.from(currentConversationMessages)),
+        );
         currentConversationMessages = [message]; // Start new one.
       } else {
         currentConversationMessages.add(message);
@@ -111,14 +118,18 @@ class InteractionAnalyzer {
 
     // Add the last conversation to the list.
     if (currentConversationMessages.isNotEmpty) {
-      conversations.add(Conversation(messages: List.from(currentConversationMessages)));
+      conversations.add(
+        Conversation(messages: List.from(currentConversationMessages)),
+      );
     }
 
     return conversations;
   }
 
   /// Calculates a map of participant names to the number of conversations they started.
-  Map<String, int> calculateConversationStarters(List<Conversation> conversations) {
+  Map<String, int> calculateConversationStarters(
+    List<Conversation> conversations,
+  ) {
     final starters = <String, int>{};
     for (final conv in conversations) {
       if (conv.messages.isNotEmpty) {
@@ -130,7 +141,9 @@ class InteractionAnalyzer {
   }
 
   /// Calculates a map of participant names to the number of conversations they ended.
-  Map<String, int> calculateConversationEnders(List<Conversation> conversations) {
+  Map<String, int> calculateConversationEnders(
+    List<Conversation> conversations,
+  ) {
     final enders = <String, int>{};
     for (final conv in conversations) {
       if (conv.messages.isNotEmpty) {
@@ -142,15 +155,18 @@ class InteractionAnalyzer {
   }
 
   /// Calculates who replies to whom and the average response time for each participant.
-  /// 
+  ///
   /// A "reply" is counted when a user sends a message after another user, within the
   /// provided [thresholdInMinutes].
   ({
     Map<String, Map<String, int>> whoRepliesToWhom,
-    Map<String, Duration> averageResponseTime
-  }) calculateInteractionMetrics({double? thresholdInMinutes}) {
+    Map<String, Duration> averageResponseTime,
+  })
+  calculateInteractionMetrics({double? thresholdInMinutes}) {
     final threshold = thresholdInMinutes ?? estimateNaturalThreshold();
-    final thresholdDuration = Duration(microseconds: (threshold * 60 * 1000 * 1000).round());
+    final thresholdDuration = Duration(
+      microseconds: (threshold * 60 * 1000 * 1000).round(),
+    );
 
     final whoRepliesToWhom = <String, Map<String, int>>{};
     final responseTimes = <String, List<Duration>>{};
@@ -164,7 +180,9 @@ class InteractionAnalyzer {
 
       // A reply only counts if it's from a different person.
       if (replier != repliee) {
-        final responseDuration = currentMessage.dateTime.difference(previousMessage.dateTime);
+        final responseDuration = currentMessage.dateTime.difference(
+          previousMessage.dateTime,
+        );
 
         // And it must be within the conversation threshold to be a valid reply.
         if (responseDuration <= thresholdDuration) {
@@ -182,15 +200,20 @@ class InteractionAnalyzer {
     final averageResponseTime = <String, Duration>{};
     responseTimes.forEach((participant, durations) {
       if (durations.isNotEmpty) {
-        final totalMicroseconds = durations.fold(0, (sum, d) => sum + d.inMicroseconds);
+        final totalMicroseconds = durations.fold(
+          0,
+          (sum, d) => sum + d.inMicroseconds,
+        );
         final averageMicroseconds = totalMicroseconds ~/ durations.length;
-        averageResponseTime[participant] = Duration(microseconds: averageMicroseconds);
+        averageResponseTime[participant] = Duration(
+          microseconds: averageMicroseconds,
+        );
       }
     });
 
     return (
       whoRepliesToWhom: whoRepliesToWhom,
-      averageResponseTime: averageResponseTime
+      averageResponseTime: averageResponseTime,
     );
   }
 }

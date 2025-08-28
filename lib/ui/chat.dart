@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../src/models/chat_analysis.dart';
@@ -15,10 +16,47 @@ String getInitials(String name) => name
 
 Color colorForName(String name) {
   final hash = name.hashCode;
-  final r = (hash & 0xFF0000) >> 16;
-  final g = (hash & 0x00FF00) >> 8;
-  final b = hash & 0x0000FF;
-  return Color.fromRGBO(r, g, b, 1);
+
+  // Color base desde el hash
+  int r = (hash & 0xFF0000) >> 16;
+  int g = (hash & 0x00FF00) >> 8;
+  int b = hash & 0x0000FF;
+
+  Color color = Color.fromRGBO(r, g, b, 1);
+
+  // Función para calcular luminancia relativa (0=negro, 1=blanco)
+  double luminance(Color c) {
+    return (0.299 * c.r + 0.587 * c.g + 0.114 * c.b);
+  }
+
+  // Detectar si es "demasiado claro"
+  bool isTooLight(Color c) => luminance(c) > 0.75;
+
+  // Detectar si es cercano a amarillo (alto R y G, bajo B)
+  bool isYellowish(Color c) =>
+      ((c.r * 255.0).round() & 0xff) > 200 &&
+      ((c.g * 255.0).round() & 0xff) > 200 &&
+      ((c.b * 255.0).round() & 0xff) < 150;
+
+  // Ajustar color si es muy claro o amarillento
+  if (isTooLight(color) || isYellowish(color)) {
+    // Convertimos a HSL para manipular tono y luminosidad
+    final hsl = HSLColor.fromColor(color);
+
+    // Si es claro, bajamos luminosidad; si es amarillo, giramos tono hacia otra gama
+    double newHue = hsl.hue;
+    if (isYellowish(color)) {
+      newHue = (hsl.hue + 180) % 360; // rotar a color opuesto
+    }
+
+    color = hsl
+        .withHue(newHue)
+        .withLightness(min(hsl.lightness, 0.5))
+        .withSaturation(max(hsl.saturation, 0.5))
+        .toColor();
+  }
+
+  return color;
 }
 
 class ChatViewScreen extends StatefulWidget {
@@ -151,7 +189,7 @@ class ChatMessageWidget extends StatelessWidget {
             const SizedBox(height: 4),
             LinearProgressIndicator(
               value: (message.sentimentScore + 5).clamp(0, 10) / 10,
-              backgroundColor: colorForName(message.author).withOpacity(0.2),
+              backgroundColor: Colors.white,
               color: message.sentimentScore > 0
                   ? Colors.green
                   : (message.sentimentScore < 0 ? Colors.red : Colors.grey),

@@ -71,7 +71,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Chat Analyzer')),
+      appBar: AppBar(
+        title: const Text('Chat Analyzer'),
+        backgroundColor: Colors.indigo,
+      ),
       body: DropTarget(
         onDragDone: (details) async {
           if (details.files.isNotEmpty) {
@@ -82,9 +85,7 @@ class _HomePageState extends State<HomePage> {
         onDragEntered: (details) => setState(() => _isDragging = true),
         onDragExited: (details) => setState(() => _isDragging = false),
         child: Container(
-          color: _isDragging
-              ? Colors.deepPurple.withOpacity(0.1)
-              : Colors.transparent,
+          color: _isDragging ? Colors.indigo : Colors.transparent,
           child: Center(
             child: _isLoading
                 ? const CircularProgressIndicator()
