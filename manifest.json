@@ -1,7 +1,7 @@
 {
   "name": "chat_analyzer_ui",
   "short_name": "chat_analyzer_ui",
-  "start_url": ".",
+  "start_url": "/chat_analyzer_ui/",
   "display": "standalone",
   "background_color": "#0175C2",
   "theme_color": "#0175C2",
