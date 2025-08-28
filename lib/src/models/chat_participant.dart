@@ -1,3 +1,5 @@
+import 'package:chat_analyzer_ui/src/analysis/stopwords_english.dart';
+import 'package:chat_analyzer_ui/src/analysis/stopwords_spanish.dart';
 import 'package:emoji_extension/emoji_extension.dart';
 import '../analysis/stopwords.dart';
 import 'chat_message.dart';
@@ -17,7 +19,7 @@ class ChatParticipant {
   Map<DateTime, double>? _sentimentScorePerDay;
 
   ChatParticipant({required this.name, List<ChatMessage>? messages})
-      : messages = messages ?? [];
+    : messages = messages ?? [];
 
   int get messageCount => messages.length;
 
@@ -26,7 +28,11 @@ class ChatParticipant {
 
     final groupedMessages = <DateTime, List<ChatMessage>>{};
     for (final message in messages) {
-      final date = DateTime(message.dateTime.year, message.dateTime.month, message.dateTime.day);
+      final date = DateTime(
+        message.dateTime.year,
+        message.dateTime.month,
+        message.dateTime.day,
+      );
       if (groupedMessages.containsKey(date)) {
         groupedMessages[date]!.add(message);
       } else {
@@ -39,7 +45,9 @@ class ChatParticipant {
 
   Map<DateTime, int> get messageCountPerDay {
     if (_messageCountPerDay != null) return _messageCountPerDay!;
-    _messageCountPerDay = messagesByDate.map((date, messages) => MapEntry(date, messages.length));
+    _messageCountPerDay = messagesByDate.map(
+      (date, messages) => MapEntry(date, messages.length),
+    );
     return _messageCountPerDay!;
   }
 
@@ -59,7 +67,10 @@ class ChatParticipant {
     final dailyScores = <DateTime, double>{};
     messagesByDate.forEach((date, messagesOnDay) {
       if (messagesOnDay.isNotEmpty) {
-        final totalScore = messagesOnDay.fold(0.0, (sum, msg) => sum + msg.sentimentScore);
+        final totalScore = messagesOnDay.fold(
+          0.0,
+          (sum, msg) => sum + msg.sentimentScore,
+        );
         dailyScores[date] = totalScore / messagesOnDay.length;
       } else {
         dailyScores[date] = 0.0;
@@ -116,7 +127,10 @@ class ChatParticipant {
       final words = message.content.toLowerCase().split(RegExp(r'\s+'));
 
       for (final word in words) {
-        if (!stopwords.contains(word) && wordPattern.hasMatch(word)) {
+        if (!stopwords.contains(word) &&
+            !spanishStopWords.contains(word) &&
+            !englishStopWords.contains(word) &&
+            wordPattern.hasMatch(word)) {
           frequency[word] = (frequency[word] ?? 0) + 1;
         }
       }
