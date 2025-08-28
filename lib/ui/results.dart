@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
+import '../src/analysis/interaction_analyzer.dart';
 import '../src/models/chat_analysis.dart';
 import '../src/models/chat_participant.dart';
 import 'chat.dart';
@@ -43,6 +46,8 @@ class _AnalysisResultViewState extends State<AnalysisResultView> {
       padding: const EdgeInsets.all(16.0),
       children: [
         _buildControlsCard(context),
+        const SizedBox(height: 16),
+        InteractionAnalysisView(analysis: widget.analysis),
         const SizedBox(height: 16),
         ...widget.analysis.participants.map(
           (p) => ParticipantStatsView(
@@ -133,6 +138,292 @@ class _AnalysisResultViewState extends State<AnalysisResultView> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class InteractionAnalysisView extends StatefulWidget {
+  final ChatAnalysis analysis;
+  const InteractionAnalysisView({super.key, required this.analysis});
+
+  @override
+  State<InteractionAnalysisView> createState() =>
+      _InteractionAnalysisViewState();
+}
+
+class _InteractionAnalysisViewState extends State<InteractionAnalysisView> {
+  late double _currentThreshold;
+  late double _naturalThreshold;
+
+  @override
+  void initState() {
+    super.initState();
+    _naturalThreshold = widget.analysis.interactionAnalyzer
+        .estimateNaturalThreshold();
+    _currentThreshold = _naturalThreshold;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final conversations = widget.analysis.interactionAnalyzer
+        .segmentConversations(thresholdInMinutes: _currentThreshold);
+    final starters = widget.analysis.interactionAnalyzer
+        .calculateConversationStarters(conversations);
+    final enders = widget.analysis.interactionAnalyzer
+        .calculateConversationEnders(conversations);
+    final metrics = widget.analysis.interactionAnalyzer
+        .calculateInteractionMetrics(thresholdInMinutes: _currentThreshold);
+    final responseTimes = metrics.averageResponseTime;
+    final replies = metrics.whoRepliesToWhom;
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Interaction Analysis',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const Divider(),
+            _buildThresholdSlider(),
+            const SizedBox(height: 24),
+            _buildStartersEndersChart(starters, enders),
+            const SizedBox(height: 24),
+            _buildResponseTimeChart(responseTimes),
+            const SizedBox(height: 24),
+            _buildReplyMatrix(replies),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThresholdSlider() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Conversation Threshold (minutes)',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Detected natural threshold: ${_naturalThreshold.toStringAsFixed(1)} min. Use the slider to adjust.',
+        ),
+        Slider(
+          value: _currentThreshold,
+          min: 1,
+          max: max(360, _naturalThreshold * 2), // 6 hours or 2x natural
+          divisions: 359,
+          label: _currentThreshold.round().toString(),
+          onChanged: (value) {
+            setState(() {
+              _currentThreshold = value;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStartersEndersChart(
+    Map<String, int> starters,
+    Map<String, int> enders,
+  ) {
+    final participants = (starters.keys.toSet()..addAll(enders.keys)).toList();
+    if (participants.isEmpty) return const SizedBox.shrink();
+
+    final barGroups = participants.asMap().entries.map((entry) {
+      final index = entry.key;
+      final name = entry.value;
+      final starterCount = starters[name]?.toDouble() ?? 0.0;
+      final enderCount = enders[name]?.toDouble() ?? 0.0;
+
+      return BarChartGroupData(
+        x: index,
+        barRods: [
+          BarChartRodData(toY: starterCount, color: Colors.blue, width: 12),
+          BarChartRodData(toY: enderCount, color: Colors.amber, width: 12),
+        ],
+      );
+    }).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Conversation Starters & Enders',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 200,
+          child: BarChart(
+            BarChartData(
+              barGroups: barGroups,
+              titlesData: FlTitlesData(
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: (value, meta) {
+                      final index = value.toInt();
+                      if (index >= 0 && index < participants.length) {
+                        return Text(
+                          participants[index].substring(
+                            0,
+                            min(participants[index].length, 3),
+                          ),
+                        );
+                      }
+                      return const Text('');
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildLegend(Colors.blue, 'Started'),
+            const SizedBox(width: 16),
+            _buildLegend(Colors.amber, 'Ended'),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildResponseTimeChart(Map<String, Duration> responseTimes) {
+    final entries = responseTimes.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+    if (entries.isEmpty) return const SizedBox.shrink();
+
+    final barGroups = entries.asMap().entries.map((entry) {
+      final index = entry.key;
+      final durationInMinutes = entry.value.value.inSeconds / 60.0;
+
+      return BarChartGroupData(
+        x: index,
+        barRods: [
+          BarChartRodData(
+            toY: durationInMinutes,
+            color: Colors.teal,
+            width: 14,
+          ),
+        ],
+      );
+    }).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Average Response Time (minutes)',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 200,
+          child: BarChart(
+            BarChartData(
+              barGroups: barGroups,
+              titlesData: FlTitlesData(
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: (value, meta) {
+                      final index = value.toInt();
+                      if (index >= 0 && index < entries.length) {
+                        final name = entries[index].key;
+                        return Text(name.substring(0, min(name.length, 3)));
+                      }
+                      return const Text('');
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReplyMatrix(Map<String, Map<String, int>> replies) {
+    final participants = replies.keys.toList()..sort();
+    if (participants.isEmpty) return const SizedBox.shrink();
+
+    final scrollController = ScrollController();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Who Replies to Whom',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 8),
+
+        // 🔹 Scrollbar + SingleChildScrollView
+        Scrollbar(
+          controller: scrollController,
+          thumbVisibility: true, // Siempre visible en desktop
+          child: SingleChildScrollView(
+            controller: scrollController,
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: [
+                const DataColumn(label: Text('Replier \\ To')),
+                ...participants.map((p) => DataColumn(label: Text(p))),
+              ],
+              rows: participants.map((replier) {
+                return DataRow(
+                  cells: [
+                    DataCell(
+                      Text(
+                        replier,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    ...participants.map((repliee) {
+                      final count = replies[replier]?[repliee] ?? 0;
+                      return DataCell(Text(count.toString()));
+                    }),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLegend(Color color, String text) {
+    return Row(
+      children: [
+        Container(width: 16, height: 16, color: color),
+        const SizedBox(width: 4),
+        Text(text),
+      ],
     );
   }
 }
@@ -374,7 +665,6 @@ class _TemporalAnalysisViewState extends State<TemporalAnalysisView> {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
-
         if (yearlyData.isEmpty)
           const Padding(
             padding: EdgeInsets.all(8.0),

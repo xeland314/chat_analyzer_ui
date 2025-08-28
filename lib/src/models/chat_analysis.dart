@@ -1,23 +1,22 @@
+import '../analysis/interaction_analyzer.dart';
 import 'chat_message.dart';
 import 'chat_participant.dart';
 
 class ChatAnalysis {
   final List<ChatParticipant> participants;
-
-  // Cache
-  List<ChatMessage>? _allMessagesChronological;
+  final List<ChatMessage> allMessagesChronological;
+  late final InteractionAnalyzer interactionAnalyzer;
 
   ChatAnalysis({List<ChatParticipant>? participants})
-      : participants = participants ?? [];
+      : participants = participants ?? [],
+        allMessagesChronological = _calculateAllMessages(participants ?? []) {
+    interactionAnalyzer = InteractionAnalyzer(allMessagesChronological);
+  }
 
-  /// Combina los mensajes de todos los participantes y los ordena por fecha.
-  List<ChatMessage> get allMessagesChronological {
-    if (_allMessagesChronological != null) return _allMessagesChronological!;
-
+  static List<ChatMessage> _calculateAllMessages(
+      List<ChatParticipant> participants) {
     final allMessages = participants.expand((p) => p.messages).toList();
     allMessages.sort((a, b) => a.dateTime.compareTo(b.dateTime));
-
-    _allMessagesChronological = allMessages;
     return allMessages;
   }
 }
