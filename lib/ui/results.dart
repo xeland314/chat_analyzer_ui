@@ -274,81 +274,151 @@ class ParticipantStatsView extends StatelessWidget {
   }
 }
 
-class TemporalAnalysisView extends StatelessWidget {
+class TemporalAnalysisView extends StatefulWidget {
   final ChatParticipant participant;
 
   const TemporalAnalysisView({super.key, required this.participant});
 
   @override
+  State<TemporalAnalysisView> createState() => _TemporalAnalysisViewState();
+}
+
+class _TemporalAnalysisViewState extends State<TemporalAnalysisView> {
+  late int _selectedYear;
+  late List<int> _availableYears;
+
+  @override
+  void initState() {
+    super.initState();
+    final years = <int>{};
+    years.addAll(widget.participant.messageCountPerDay.keys.map((d) => d.year));
+    years.addAll(
+      widget.participant.sentimentScorePerDay.keys.map((d) => d.year),
+    );
+
+    _availableYears = years.toList()
+      ..sort((a, b) => b.compareTo(a)); // Sort descending
+
+    _selectedYear = _availableYears.isNotEmpty
+        ? _availableYears.first
+        : DateTime.now().year;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_availableYears.isEmpty &&
+        widget.participant.messageCountByHour.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 24),
-        Text(
-          'Temporal Analysis',
-          style: Theme.of(context).textTheme.headlineSmall,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Temporal Analysis',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            if (_availableYears.length > 1) _buildYearSelector(),
+          ],
         ),
         const Divider(),
-        const SizedBox(height: 16),
-        _buildActivityHeatmap(context),
-        const SizedBox(height: 24),
-        _buildHourlyActivityChart(context),
-        const SizedBox(height: 24),
-        _buildSentimentHeatmap(context),
+        if (_availableYears.isNotEmpty)
+          Column(
+            children: [
+              const SizedBox(height: 16),
+              _buildActivityHeatmap(context, _selectedYear),
+              const SizedBox(height: 24),
+              _buildSentimentHeatmap(context, _selectedYear),
+              const SizedBox(height: 24),
+            ],
+          ),
+        _buildHourlyActivityChart(context), // This chart is year-agnostic
       ],
     );
   }
 
-  Widget _buildActivityHeatmap(BuildContext context) {
-    final messageCount = participant.messageCountPerDay;
+  Widget _buildYearSelector() {
+    return DropdownButton<int>(
+      value: _selectedYear,
+      items: _availableYears.map((year) {
+        return DropdownMenuItem<int>(value: year, child: Text(year.toString()));
+      }).toList(),
+      onChanged: (newYear) {
+        if (newYear != null) {
+          setState(() {
+            _selectedYear = newYear;
+          });
+        }
+      },
+    );
+  }
+
+  Widget _buildActivityHeatmap(BuildContext context, int year) {
+    final messageCount = widget.participant.messageCountPerDay;
+    final yearlyData = Map.fromEntries(
+      messageCount.entries.where((entry) => entry.key.year == year),
+    );
 
     final scrollController = ScrollController();
 
-    // Find the min and max dates to set the calendar range
-    final dates = messageCount.keys.toList()..sort();
-    final firstDate = dates.first;
-    final lastDate = dates.last;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Message Activity', style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          'Message Activity ($year)',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         const SizedBox(height: 8),
 
-        // 🌟 Envolvemos en Scrollbar + SingleChildScrollView horizontal
-        SizedBox(
-          height: 250, // ajusta según tamaño de tu heatmap
-          child: Scrollbar(
-            controller: scrollController,
-            thumbVisibility: true, // para que se vea siempre
-            child: SingleChildScrollView(
+        if (yearlyData.isEmpty)
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('No message activity for this year.'),
+          )
+        else
+          SizedBox(
+            height: 250, // Altura fija para contener el heatmap + barra
+            child: Scrollbar(
               controller: scrollController,
-              scrollDirection: Axis.horizontal,
-              child: HeatMap(
-                datasets: messageCount.map((k, v) => MapEntry(k, v)),
-                colorMode: ColorMode.opacity,
-                showText: false,
-                showColorTip: true,
-                scrollable: true,
-                startDate: firstDate,
-                endDate: lastDate,
-                colorsets: const {1: Colors.indigo},
-                onClick: (date) {
-                  final count = messageCount[date] ?? 0;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('$count messages on this day')),
-                  );
-                },
+              thumbVisibility: true, // Siempre visible en desktop
+              child: SingleChildScrollView(
+                controller: scrollController,
+                scrollDirection: Axis.horizontal,
+                child: HeatMap(
+                  datasets: yearlyData,
+                  startDate: DateTime(year, 1, 1),
+                  endDate: DateTime(year, 12, 31),
+                  colorMode: ColorMode.opacity,
+                  showText: false,
+                  colorsets: const {1: Colors.indigo},
+                  onClick: (date) {
+                    final count = yearlyData[date] ?? 0;
+                    final snackBar = SnackBar(
+                      content: Text('$count messages on this day'),
+                      action: SnackBarAction(
+                        label: 'Close',
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        },
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  },
+                ),
               ),
             ),
           ),
-        ),
       ],
     );
   }
 
   Widget _buildHourlyActivityChart(BuildContext context) {
-    final data = participant.messageCountByHour;
+    final data = widget.participant.messageCountByHour;
     if (data.isEmpty) return const SizedBox.shrink();
 
     final entries = List.generate(24, (hour) {
@@ -427,11 +497,30 @@ class TemporalAnalysisView extends StatelessWidget {
     );
   }
 
-  Widget _buildSentimentHeatmap(BuildContext context) {
-    final sentimentPerDay = participant.sentimentScorePerDay;
-    if (sentimentPerDay.isEmpty) return const SizedBox.shrink();
+  Widget _buildSentimentHeatmap(BuildContext context, int year) {
+    final sentimentPerDay = widget.participant.sentimentScorePerDay;
+    final yearlyData = Map.fromEntries(
+      sentimentPerDay.entries.where((entry) => entry.key.year == year),
+    );
 
-    final sentimentCategoryPerDay = sentimentPerDay.map((date, score) {
+    if (yearlyData.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Sentiment Trend ($year)',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 8),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('No sentiment data for this year.'),
+          ),
+        ],
+      );
+    }
+
+    final sentimentCategoryPerDay = yearlyData.map((date, score) {
       int category;
       if (score > 0.05) {
         category = 1; // Positive
@@ -443,42 +532,42 @@ class TemporalAnalysisView extends StatelessWidget {
       return MapEntry(date, category);
     });
 
-    final dates = sentimentPerDay.keys.toList()..sort();
-    final firstDate = dates.first;
-    final lastDate = dates.last;
-
     final scrollController = ScrollController();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Sentiment Trend', style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          'Sentiment Trend ($year)',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         const SizedBox(height: 8),
 
-        // ⬇ Envoltorio scrollable
+        // 🔹 Scrollbar + SingleChildScrollView para scroll en escritorio
         SizedBox(
-          height: 250, // Ajusta según el tamaño del heatmap
+          height: 250, // ajusta a la altura del heatmap
           child: Scrollbar(
             controller: scrollController,
-            thumbVisibility: true, // Siempre visible en desktop
+            thumbVisibility: true,
             child: SingleChildScrollView(
               controller: scrollController,
               scrollDirection: Axis.horizontal,
               child: HeatMap(
                 datasets: sentimentCategoryPerDay,
-                startDate: firstDate,
-                endDate: lastDate,
+                startDate: DateTime(year, 1, 1),
+                endDate: DateTime(year, 12, 31),
                 colorMode: ColorMode.color,
                 showText: false,
-                showColorTip: true,
+                showColorTip:
+                    true, // si quieres que mantenga la leyenda de color
                 colorsets: const {
                   -1: Colors.red, // Negative
                   1: Colors.green, // Positive
                   9: Colors.grey, // Neutral
                 },
                 onClick: (date) {
-                  final score = sentimentPerDay[date] ?? 0.0;
-                  final category = sentimentCategoryPerDay[date]!;
+                  final score = yearlyData[date] ?? 0.0;
+                  final category = sentimentCategoryPerDay[date] ?? 0;
                   String sentimentText = category > 0
                       ? 'Positive'
                       : category < 0
