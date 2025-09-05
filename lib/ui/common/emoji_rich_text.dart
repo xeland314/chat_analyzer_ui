@@ -6,6 +6,7 @@ Widget emojiRichText(
   String text, {
   TextStyle? baseStyle,
   String emojiFontFamily = 'Noto Color Emoji',
+  TextOverflow overflow = TextOverflow.visible,
 }) {
   final spans = <InlineSpan>[];
   String remaining = text;
@@ -43,5 +44,5 @@ Widget emojiRichText(
     spans.add(TextSpan(text: remaining, style: baseStyle));
   }
 
-  return Text.rich(TextSpan(children: spans), overflow: TextOverflow.ellipsis,);
+  return Text.rich(TextSpan(children: spans), overflow: overflow);
 }
