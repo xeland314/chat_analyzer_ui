@@ -41,7 +41,7 @@ class ActivityHeatmap extends StatelessWidget {
                   endDate: DateTime(year, 12, 31),
                   colorMode: ColorMode.opacity,
                   showText: false,
-                  colorsets: const {1: Colors.indigo},
+                  colorsets: {1: Colors.teal.shade900},
                   onClick: (date) {
                     final count = data[date] ?? 0;
                     final snackBar = SnackBar(

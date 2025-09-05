@@ -76,7 +76,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat Analyzer'),
-        backgroundColor: Colors.indigo,
+        backgroundColor: Colors.teal,
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 24),
       ),
       body: DropTarget(
         onDragDone: (details) async {
@@ -89,7 +90,7 @@ class _HomePageState extends State<HomePage> {
         onDragExited: (details) => setState(() => _isDragging = false),
         child: Container(
           color: _isDragging
-              ? Colors.indigo.withOpacity(0.5)
+              ? Colors.amber.withOpacity(0.5)
               : Colors.transparent,
           child: Center(
             child: AnalysisView(

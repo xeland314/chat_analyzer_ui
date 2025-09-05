@@ -16,7 +16,9 @@ class ChatAnalyzerApp extends StatelessWidget {
       title: 'Chat Analyzer',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.indigo,
+          // Sugerencia de paleta para complementar el gato pixelado naranja
+          // Puedes probar otras paletas como `Colors.amber` o `Colors.deepOrange`
+          seedColor: Colors.teal,
           brightness: Brightness.dark,
         ),
         useMaterial3: true,

@@ -17,7 +17,7 @@ class HourlyActivityChart extends StatelessWidget {
         barRods: [
           BarChartRodData(
             toY: data[hour]?.toDouble() ?? 0.0,
-            color: Colors.blue,
+            color: Colors.teal,
             width: 10,
             borderRadius: BorderRadius.zero,
           ),

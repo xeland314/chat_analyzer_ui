@@ -28,7 +28,7 @@ class StartersEndersChart extends StatelessWidget {
       return BarChartGroupData(
         x: index,
         barRods: [
-          BarChartRodData(toY: starterCount, color: Colors.blue, width: 12),
+          BarChartRodData(toY: starterCount, color: Colors.teal, width: 12),
           BarChartRodData(toY: enderCount, color: Colors.amber, width: 12),
         ],
       );
@@ -79,7 +79,7 @@ class StartersEndersChart extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(child: ChartLegendItem(Colors.blue, 'Started')),
+            Expanded(child: ChartLegendItem(Colors.teal, 'Started')),
             const SizedBox(width: 16),
             Expanded(child: ChartLegendItem(Colors.amber, 'Ended')),
           ],
