@@ -3,9 +3,9 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../src/analysis/analysis_service.dart';
-import '../src/models/chat_analysis.dart';
-import 'results.dart';
+import '../../src/analysis/analysis_service.dart';
+import '../../src/models/chat_analysis.dart';
+import '../home/analysis_view.dart';
 
 // --- Helper Functions ---
 
@@ -14,7 +14,7 @@ Future<ChatAnalysis> _analyzeInIsolate(String content) async {
   return await service.getAnalysis(content);
 }
 
-// --- Home Page ---
+// --- HomePage (El componente Stateful para la lógica y el estado) ---
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,15 +36,18 @@ class _HomePageState extends State<HomePage> {
 
     try {
       final analysis = await compute(_analyzeInIsolate, content);
+      if (!mounted) return;
       setState(() {
         _analysis = analysis;
       });
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Error processing content: $e')));
     }
 
+    if (!mounted) return;
     setState(() {
       _isLoading = false;
     });
@@ -85,13 +88,15 @@ class _HomePageState extends State<HomePage> {
         onDragEntered: (details) => setState(() => _isDragging = true),
         onDragExited: (details) => setState(() => _isDragging = false),
         child: Container(
-          color: _isDragging ? Colors.indigo : Colors.transparent,
+          color: _isDragging
+              ? Colors.indigo.withOpacity(0.5)
+              : Colors.transparent,
           child: Center(
-            child: _isLoading
-                ? const CircularProgressIndicator()
-                : _analysis == null
-                ? _buildInitialView()
-                : AnalysisResultView(analysis: _analysis!),
+            child: AnalysisView(
+              isLoading: _isLoading,
+              analysis: _analysis,
+              onFilePick: _pickAndAnalyzeFile,
+            ),
           ),
         ),
       ),
@@ -102,28 +107,6 @@ class _HomePageState extends State<HomePage> {
               child: const Icon(Icons.add),
             )
           : null,
-    );
-  }
-
-  Widget _buildInitialView() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(Icons.cloud_upload_outlined, size: 80, color: Colors.grey),
-        const SizedBox(height: 16),
-        const Text(
-          'Drag and drop a .txt file here',
-          style: TextStyle(fontSize: 18),
-        ),
-        const SizedBox(height: 16),
-        const Text('or'),
-        const SizedBox(height: 16),
-        ElevatedButton.icon(
-          onPressed: _pickAndAnalyzeFile,
-          icon: const Icon(Icons.upload_file),
-          label: const Text('Load Chat File (.txt)'),
-        ),
-      ],
     );
   }
 }

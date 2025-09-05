@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'ui/home.dart';
+import 'ui/pages/home_page.dart';
 
 // --- Main App ---
 
