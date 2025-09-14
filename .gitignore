@@ -11,6 +11,7 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+.kotlin/sessions/
 
 # IntelliJ related
 *.iml
@@ -46,3 +47,7 @@ app.*.map.json
 
 # Other
 python/
+ChatAnalyzer.AppDir/
+
+# Binaries
+ChatAnalyzer-x86_64.AppImage

@@ -44,6 +44,10 @@ dependencies:
     git: https://github.com/xeland314/dart_sentiment.git
   flutter_heatmap_calendar: ^1.0.5
   url_launcher: ^6.3.2
+  receive_sharing_intent:
+    git:
+      url: https://github.com/KasemJaffer/receive_sharing_intent.git
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:

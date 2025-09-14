@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.chat_analyzer_ui"
+    namespace = "com.xeland314.chat_analyzer_ui"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
