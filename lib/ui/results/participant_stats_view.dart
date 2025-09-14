@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../common/emoji_rich_text.dart';
 import '../../src/models/chat_participant.dart';
 import 'frecuency_list_view.dart';
 import 'temporal_analysis_view.dart';
@@ -33,12 +34,12 @@ class ParticipantStatsView extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: ExpansionTile(
-        title: Text(
+        title: emojiRichText(
           participant.name,
-          style: TextStyle(
+          baseStyle: TextStyle(
             fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-            fontFamily: 'Noto Color Emoji',
           ),
+          overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text(
           '${participant.messageCount} messages, ${participant.multimediaCount} multimedia files',
