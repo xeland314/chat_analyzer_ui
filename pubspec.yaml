@@ -38,7 +38,6 @@ dependencies:
   crypto: ^3.0.6
   file_picker: ^10.3.2
   desktop_drop: ^0.6.1
-  emoji_extension: ^1.2.0
   fl_chart: ^1.0.0
   dart_sentiment:
     git: https://github.com/xeland314/dart_sentiment.git

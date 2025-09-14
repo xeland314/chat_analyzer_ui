@@ -1,6 +1,6 @@
+import 'package:chat_analyzer_ui/src/analysis/emoji_regex.dart';
 import 'package:chat_analyzer_ui/src/analysis/stopwords_english.dart';
 import 'package:chat_analyzer_ui/src/analysis/stopwords_spanish.dart';
-import 'package:emoji_extension/emoji_extension.dart';
 import '../analysis/stopwords.dart';
 import 'chat_message.dart';
 
@@ -146,7 +146,7 @@ class ChatParticipant {
     final frequency = <String, int>{};
     for (final message in messages) {
       // Usa el paquete emoji_extension para extraer emojis de forma fiable.
-      final emojis = message.content.emojis.extract;
+      final emojis = EmojiRegex.extract(message.content);
       for (final emoji in emojis) {
         frequency[emoji] = (frequency[emoji] ?? 0) + 1;
       }

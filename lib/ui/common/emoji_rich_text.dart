@@ -1,5 +1,6 @@
+import 'package:chat_analyzer_ui/src/analysis/emoji_regex.dart';
 import 'package:flutter/material.dart';
-import 'package:emoji_extension/emoji_extension.dart';
+
 
 /// Construye un RichText mezclando texto normal y emojis con fuente especial.
 Widget emojiRichText(
@@ -12,7 +13,7 @@ Widget emojiRichText(
   String remaining = text;
 
   // Extraemos emojis con emoji_extension
-  final emojis = text.emojis.extract;
+  final emojis = EmojiRegex.extract(text);
 
   for (final emoji in emojis) {
     final index = remaining.indexOf(emoji);
