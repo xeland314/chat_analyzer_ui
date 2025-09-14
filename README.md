@@ -6,6 +6,10 @@ A Flutter application to analyze chat logs, providing detailed statistics and vi
 
 The application offers a comprehensive analysis of chat files, broken down into several key areas:
 
+- **Android Intent Handling**: Seamlessly open and analyze chat files directly from other applications on Android.
+- **Log Viewer Copy Button**: Easily copy application logs to the clipboard for debugging or sharing.
+- **Image Export with Watermark**: Export analysis results as shareable images with a custom watermark. On Linux, images are saved locally.
+
 ### 1. General Statistics (Per Participant)
 
 - **Message Count**: Total number of messages sent by each participant.
@@ -29,6 +33,18 @@ This section analyzes the dynamics of the conversation between all participants.
 - **Conversation Starters & Enders**: A grouped bar chart that shows who tends to initiate and who tends to end conversations most often.
 - **Average Response Time**: A bar chart comparing how quickly each participant typically replies, measured in minutes.
 - **Reply Matrix**: A detailed data table showing who replies to whom and the frequency of those replies.
+  - **In-degree and Out-degree**: Identify who talks more (out-degree) and who is replied to more (in-degree).
+  - **Balance**: The difference between out-degree and in-degree, indicating if a participant talks more than they receive replies.
+- **Reciprocity Index**: A global metric (0-1) indicating the symmetry of communication within the chat.
+- **Reciprocity Heatmap**: A visual representation of the reciprocity between each pair of participants.
+- **PageRank**: A ranking of participants based on their communication influence within the chat network.
+- **Matrix Exponentiation (M²)**: A normalized matrix showing indirect influence, revealing how participants influence others through intermediaries.
+- **Composite Affinity**: A metric combining direct and indirect influence to identify strong communication ties.
+- **Broker Detection**: Identifies participants who act as communication bridges between others.
+- **Markov Chain View**: Displays the transition probabilities between participants, showing the likelihood of one participant replying to another.
+- **Emitter Similarity**: Identifies participants with similar outgoing communication patterns.
+- **Receiver Similarity**: Identifies participants with similar incoming communication patterns.
+- **Participation Equity (Gini Coefficient)**: Measures the equality of speaking and listening participation among chat members.
 
 ## Tech Stack
 
