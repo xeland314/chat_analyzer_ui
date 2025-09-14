@@ -11,6 +11,7 @@ class AnalysisControlsCard extends StatelessWidget {
   final ValueChanged<String> onRemoveIgnoredWord;
   final TextEditingController textController;
   final VoidCallback onViewChat;
+  final VoidCallback onResetAnalysis;
 
   const AnalysisControlsCard({
     super.key,
@@ -21,6 +22,7 @@ class AnalysisControlsCard extends StatelessWidget {
     required this.onRemoveIgnoredWord,
     required this.textController,
     required this.onViewChat,
+    required this.onResetAnalysis,
   });
 
   @override
@@ -40,6 +42,12 @@ class AnalysisControlsCard extends StatelessWidget {
               onPressed: onViewChat,
               icon: const Icon(Icons.chat_bubble_outline),
               label: const Text('View Full Chat'),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton.icon(
+              onPressed: onResetAnalysis,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Reset Analysis'),
             ),
             const SizedBox(height: 16),
             Text('Show Top: ${displayCount.round()}'),

@@ -119,17 +119,11 @@ class _HomePageState extends State<HomePage> {
               isLoading: _isLoading,
               analysis: _analysis,
               onFilePick: _pickAndAnalyzeFile,
+              onResetAnalysis: _resetAnalysis,
             ),
           ),
         ),
       ),
-      floatingActionButton: _analysis != null
-          ? FloatingActionButton(
-              onPressed: _resetAnalysis,
-              tooltip: 'Analyze another chat',
-              child: const Icon(Icons.add),
-            )
-          : null,
     );
   }
 }

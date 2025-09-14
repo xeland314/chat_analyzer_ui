@@ -10,12 +10,14 @@ class AnalysisView extends StatelessWidget {
   final bool isLoading;
   final ChatAnalysis? analysis;
   final VoidCallback onFilePick;
+  final VoidCallback onResetAnalysis;
 
   const AnalysisView({
     super.key,
     required this.isLoading,
     required this.analysis,
     required this.onFilePick,
+    required this.onResetAnalysis,
   });
 
   @override
@@ -23,7 +25,7 @@ class AnalysisView extends StatelessWidget {
     if (isLoading) {
       return const LoadingView();
     } else if (analysis != null) {
-      return AnalysisResultView(analysis: analysis!);
+      return AnalysisResultView(analysis: analysis!, onResetAnalysis: onResetAnalysis);
     } else {
       return InitialView(onFilePick: onFilePick);
     }
