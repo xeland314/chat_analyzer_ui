@@ -1,5 +1,17 @@
+import 'package:chat_analyzer_ui/src/analysis/matrix_operations.dart';
+import 'package:chat_analyzer_ui/ui/results/communication_graph_view.dart';
+import 'package:chat_analyzer_ui/ui/results/reciprocity_heatmap_view.dart';
+import 'package:chat_analyzer_ui/ui/results/participation_equity_view.dart';
+import 'package:chat_analyzer_ui/ui/results/emitter_similarity_view.dart';
+import 'package:chat_analyzer_ui/ui/results/receiver_similarity_view.dart';
+import 'package:chat_analyzer_ui/ui/results/broker_detection_view.dart';
+import 'package:chat_analyzer_ui/ui/results/composite_affinity_view.dart';
+import 'package:chat_analyzer_ui/ui/results/markov_chain_view.dart';
+import 'package:chat_analyzer_ui/ui/results/matrix_squared_view.dart';
+import 'package:chat_analyzer_ui/ui/results/pagerank_view.dart';
 import 'package:flutter/material.dart';
 import '../../src/models/chat_analysis.dart';
+import 'reciprocity_index.dart';
 import 'reply_matrix_table.dart';
 import 'response_time_chart.dart';
 import 'starters_enders_chart.dart';
@@ -42,6 +54,7 @@ class _InteractionAnalysisViewState extends State<InteractionAnalysisView> {
         .calculateInteractionMetrics(thresholdInMinutes: _currentThreshold);
     final responseTimes = metrics.averageResponseTime;
     final replies = metrics.whoRepliesToWhom;
+    final matrixSquared = squareMatrix(replies);
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -70,6 +83,28 @@ class _InteractionAnalysisViewState extends State<InteractionAnalysisView> {
             ResponseTimeChart(responseTimes: responseTimes),
             const SizedBox(height: 24),
             ReplyMatrixTable(replies: replies),
+            const SizedBox(height: 24),
+            ReciprocityIndex(replies: replies),
+            const SizedBox(height: 24),
+            PageRankView(replies: replies),
+            const SizedBox(height: 24),
+            MatrixSquaredView(replies: replies),
+            const SizedBox(height: 24),
+            CommunicationGraphView(replies: replies),
+            const SizedBox(height: 24),
+            MarkovChainView(replies: replies),
+            const SizedBox(height: 24),
+            ReciprocityHeatmapView(replies: replies),
+            const SizedBox(height: 24),
+            CompositeAffinityView(replies: replies, matrixSquared: matrixSquared),
+            const SizedBox(height: 24),
+            BrokerDetectionView(replies: replies),
+            const SizedBox(height: 24),
+            EmitterSimilarityView(replies: replies),
+            const SizedBox(height: 24),
+            ReceiverSimilarityView(replies: replies),
+            const SizedBox(height: 24),
+            ParticipationEquityView(replies: replies),
           ],
         ),
       ),

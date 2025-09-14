@@ -14,6 +14,27 @@ class ReplyMatrixTable extends StatelessWidget {
 
     final scrollController = ScrollController();
 
+    // Calculate degrees
+    final outDegree = <String, int>{};
+    final inDegree = <String, int>{};
+    for (final p1 in participants) {
+      outDegree[p1] = 0;
+      inDegree[p1] = 0;
+    }
+
+    for (final replier in participants) {
+      for (final repliee in participants) {
+        final count = replies[replier]?[repliee] ?? 0;
+        outDegree[replier] = (outDegree[replier] ?? 0) + count;
+        inDegree[repliee] = (inDegree[repliee] ?? 0) + count;
+      }
+    }
+
+    final balance = <String, int>{};
+    for (final p in participants) {
+      balance[p] = (outDegree[p] ?? 0) - (inDegree[p] ?? 0);
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -35,33 +56,43 @@ class ReplyMatrixTable extends StatelessWidget {
                   (p) => DataColumn(
                     label: emojiRichText(
                       p,
-                      baseStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Noto Color Emoji',
-                      ),
+                      baseStyle: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
+                const DataColumn(label: Text('Out-degree (Replies Sent)')),
+                const DataColumn(label: Text('Balance (Out - In)')),
               ],
-              rows: participants.map((replier) {
-                return DataRow(
-                  cells: [
-                    DataCell(
-                      emojiRichText(
-                        replier,
-                        baseStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Noto Color Emoji',
+              rows: [
+                ...participants.map((replier) {
+                  return DataRow(
+                    cells: [
+                      DataCell(
+                        emojiRichText(
+                          replier,
+                          baseStyle: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
-                    ...participants.map((repliee) {
-                      final count = replies[replier]?[repliee] ?? 0;
-                      return DataCell(Text(count.toString()));
+                      ...participants.map((repliee) {
+                        final count = replies[replier]?[repliee] ?? 0;
+                        return DataCell(Text(count.toString()));
+                      }),
+                      DataCell(Text(outDegree[replier].toString())),
+                      DataCell(Text(balance[replier].toString())),
+                    ],
+                  );
+                }),
+                DataRow(
+                  cells: [
+                    const DataCell(Text('In-degree (Replies Received)')),
+                    ...participants.map((p) {
+                      return DataCell(Text(inDegree[p].toString()));
                     }),
+                    const DataCell(Text('')), // Empty cell for Out-degree
+                    const DataCell(Text('')), // Empty cell for Balance
                   ],
-                );
-              }).toList(),
+                ),
+              ],
             ),
           ),
         ),
