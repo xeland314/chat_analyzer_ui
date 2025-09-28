@@ -10,14 +10,16 @@ class AnalysisView extends StatelessWidget {
   final bool isLoading;
   final ChatAnalysis? analysis;
   final VoidCallback onFilePick;
-  final VoidCallback onResetAnalysis;
+  final double displayCount;
+  final Set<String> ignoredWords;
 
   const AnalysisView({
     super.key,
     required this.isLoading,
     required this.analysis,
     required this.onFilePick,
-    required this.onResetAnalysis,
+    required this.displayCount,
+    required this.ignoredWords,
   });
 
   @override
@@ -25,7 +27,11 @@ class AnalysisView extends StatelessWidget {
     if (isLoading) {
       return const LoadingView();
     } else if (analysis != null) {
-      return AnalysisResultView(analysis: analysis!, onResetAnalysis: onResetAnalysis);
+      return AnalysisResultView(
+        analysis: analysis!,
+        displayCount: displayCount,
+        ignoredWords: ignoredWords,
+      );
     } else {
       return InitialView(onFilePick: onFilePick);
     }

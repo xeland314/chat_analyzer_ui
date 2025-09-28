@@ -5,8 +5,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import '../../src/analysis/analysis_service.dart';
 import '../../src/models/chat_analysis.dart';
+import '../chat/chat_view_screen.dart';
 import '../home/analysis_view.dart';
 import '../common/log.dart';
+import '../home/display_options_dialog.dart';
 
 // --- Helper ---
 Future<ChatAnalysis> _analyzeInIsolate(String content) async {
@@ -26,6 +28,8 @@ class _HomePageState extends State<HomePage> {
   ChatAnalysis? _analysis;
   bool _isLoading = false;
   bool _isDragging = false;
+  double _displayCount = 5.0;
+  final Set<String> _customIgnoredWords = {};
 
   @override
   void initState() {
@@ -82,6 +86,38 @@ class _HomePageState extends State<HomePage> {
     setState(() => _analysis = null);
   }
 
+  void _openDisplayOptions() {
+    showDialog(
+      context: context,
+      builder: (context) => DisplayOptionsDialog(
+        initialDisplayCount: _displayCount,
+        initialIgnoredWords: _customIgnoredWords,
+        onDisplayCountChanged: (value) {
+          setState(() {
+            _displayCount = value;
+          });
+        },
+        onIgnoredWordsChanged: (words) {
+          setState(() {
+            _customIgnoredWords.clear();
+            _customIgnoredWords.addAll(words);
+          });
+        },
+      ),
+    );
+  }
+
+  void _viewFullChat() {
+    if (_analysis != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChatViewScreen(analysis: _analysis!),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +126,23 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.teal,
         titleTextStyle: const TextStyle(color: Colors.white, fontSize: 24),
         actions: [
+          if (_analysis != null)
+            IconButton(
+              icon: const Icon(Icons.chat),
+              onPressed: _viewFullChat,
+              tooltip: 'View Full Chat',
+            ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: _openDisplayOptions,
+            tooltip: 'Display Options',
+          ),
+          if (_analysis != null)
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: _resetAnalysis,
+              tooltip: 'Reset Analysis',
+            ),
           IconButton(
             icon: const Icon(Icons.bug_report),
             onPressed: () {
@@ -98,6 +151,7 @@ class _HomePageState extends State<HomePage> {
                 builder: (_) => const LogViewerDialog(),
               );
             },
+            tooltip: 'View Logs',
           ),
         ],
       ),
@@ -119,7 +173,8 @@ class _HomePageState extends State<HomePage> {
               isLoading: _isLoading,
               analysis: _analysis,
               onFilePick: _pickAndAnalyzeFile,
-              onResetAnalysis: _resetAnalysis,
+              displayCount: _displayCount,
+              ignoredWords: _customIgnoredWords,
             ),
           ),
         ),
