@@ -3,7 +3,7 @@ import '../common/emoji_rich_text.dart';
 import '../../src/models/chat_participant.dart';
 import 'frecuency_list_view.dart';
 import 'temporal_analysis_view.dart';
-import 'sentiment_pie_chart.dart';
+import 'sentiment_bar_chart.dart';
 
 /// Muestra estadísticas de un participante individual del chat.
 ///
@@ -50,7 +50,7 @@ class ParticipantStatsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SentimentPieChart(sentimentData: participant.sentimentAnalysis),
+                SentimentBarChart(sentimentData: participant.sentimentAnalysis),
                 const SizedBox(height: 16),
                 FrequencyListView(title: 'Most Common Words', data: topWords),
                 const SizedBox(height: 16),
