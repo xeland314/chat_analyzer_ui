@@ -30,42 +30,76 @@ class StartersEndersView extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 16),
-        _buildParticipantList('Starters', sortedStarters),
+        _buildChart(
+          context,
+          'Starters',
+          sortedStarters,
+          Colors.teal,
+        ),
         const SizedBox(height: 16),
-        _buildParticipantList('Enders', sortedEnders),
+        _buildChart(
+          context,
+          'Enders',
+          sortedEnders,
+          Colors.teal.shade300,
+        ),
       ],
     );
   }
 
-  Widget _buildParticipantList(
+  Widget _buildChart(
+    BuildContext context,
     String title,
     List<MapEntry<String, int>> participants,
+    Color color,
   ) {
+    if (participants.isEmpty) return const SizedBox.shrink();
+
+    final maxValue =
+        participants.map((e) => e.value).reduce((a, b) => a > b ? a : b);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 70,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: participants.length,
-            itemBuilder: (context, index) {
-              final participant = participants[index];
-              return Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: Column(
-                  children: [
-                    authorAvatar(participant.key),
-                    const SizedBox(height: 4),
-                    Text('${participant.value}'),
-                  ],
-                ),
-              );
-            },
-          ),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
+        const SizedBox(height: 8),
+        ...participants.map((entry) {
+          final proportion = maxValue > 0 ? entry.value / maxValue : 0.0;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              children: [
+                SizedBox(width: 50, child: authorAvatar(entry.key)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: FractionallySizedBox(
+                    alignment: Alignment.centerLeft,
+                    widthFactor: proportion,
+                    child: Container(
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: color,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${entry.value}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
       ],
     );
   }

@@ -1,14 +1,39 @@
 import 'package:flutter/material.dart';
 import '../../src/models/chat_analysis.dart';
-import 'interaction_analysis_view.dart';
-import 'participant_stats_view.dart';
+import 'dashboard_view.dart';
+import 'advanced_analysis_view.dart';
 import '../exports/export_button.dart';
 
-// --- Resultados de Análisis de Chat ---
-/// Vista principal que muestra todos los resultados del análisis.
-///
-/// Gestiona las opciones de visualización, como la cantidad de palabras a mostrar
-/// y las palabras a ignorar, y pasa estos estados a los widgets secundarios.
+class AdvancedAnalysisPage extends StatelessWidget {
+  final ChatAnalysis analysis;
+  final double displayCount;
+  final Set<String> ignoredWords;
+
+  const AdvancedAnalysisPage({
+    super.key,
+    required this.analysis,
+    required this.displayCount,
+    required this.ignoredWords,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Advanced Analysis')),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          AdvancedAnalysisView(
+            analysis: analysis,
+            displayCount: displayCount,
+            ignoredWords: ignoredWords,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class AnalysisResultView extends StatelessWidget {
   final ChatAnalysis analysis;
   final double displayCount;
@@ -27,19 +52,29 @@ class AnalysisResultView extends StatelessWidget {
     return Scaffold(
       body: RepaintBoundary(
         key: _analysisViewKey,
-        child: ListView(
+        child: Padding(
           padding: const EdgeInsets.all(16.0),
-          children: [
-            ...analysis.participants.map(
-              (p) => ParticipantStatsView(
-                participant: p,
-                displayCount: displayCount.round(),
-                ignoredWords: ignoredWords,
+          child: ListView(
+            children: [
+              DashboardView(analysis: analysis),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AdvancedAnalysisPage(
+                        analysis: analysis,
+                        displayCount: displayCount,
+                        ignoredWords: ignoredWords,
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('View Advanced Analysis'),
               ),
-            ),
-            const SizedBox(height: 16),
-            InteractionAnalysisView(analysis: analysis),
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: ExportButton(

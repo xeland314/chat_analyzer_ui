@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../src/analysis/matrix_operations.dart';
+import '../../../src/analysis/matrix_operations.dart';
 
-class ParticipationEquityView extends StatelessWidget {
+class EquityGauges extends StatelessWidget {
   final Map<String, Map<String, int>> replies;
 
-  const ParticipationEquityView({super.key, required this.replies});
+  const EquityGauges({super.key, required this.replies});
 
   @override
   Widget build(BuildContext context) {
@@ -38,24 +38,48 @@ class ParticipationEquityView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 24),
         Text(
-          'Participation Equity (Gini Coefficient)',
+          'Participation Equity',
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
-        Text(
-          'Gini for Out-degree (Speaking): ${giniOutDegree.toStringAsFixed(2)}',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        Text(
-          'Gini for In-degree (Listening): ${giniInDegree.toStringAsFixed(2)}',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        _buildGauge('Speaking Equity', giniOutDegree),
+        const SizedBox(height: 8),
+        _buildGauge('Listening Equity', giniInDegree),
         const SizedBox(height: 4),
         Text(
           '(0 = perfect equality, 1 = perfect inequality)',
           style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGauge(String title, double value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: LinearProgressIndicator(
+                  value: value,
+                  minHeight: 20,
+                  backgroundColor: Colors.grey.shade300,
+                  valueColor: ColorTween(
+                    begin: Colors.green,
+                    end: Colors.red,
+                  ).animate(AlwaysStoppedAnimation(value)),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(value.toStringAsFixed(2)),
+          ],
         ),
       ],
     );
