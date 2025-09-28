@@ -4,6 +4,7 @@ import '../../src/models/chat_participant.dart';
 import 'frecuency_list_view.dart';
 import 'temporal_analysis_view.dart';
 import 'sentiment_bar_chart.dart';
+import 'hourly_activity_chart.dart';
 
 /// Muestra estadísticas de un participante individual del chat.
 ///
@@ -58,6 +59,7 @@ class ParticipantStatsView extends StatelessWidget {
                   title: 'Most Common Emojis',
                   data: participant.getMostCommonEmojis(displayCount),
                 ),
+                HourlyActivityChart(data: participant.messageCountByHour),
                 TemporalAnalysisView(participant: participant),
               ],
             ),

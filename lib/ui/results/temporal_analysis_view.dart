@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../src/models/chat_participant.dart';
-import 'hourly_activity_chart.dart';
 import 'sentiment_heatmap.dart';
 import 'activity_heatmap.dart';
 
@@ -86,7 +85,6 @@ class _TemporalAnalysisViewState extends State<TemporalAnalysisView> {
               const SizedBox(height: 24),
             ],
           ),
-        HourlyActivityChart(data: widget.participant.messageCountByHour),
       ],
     );
   }
