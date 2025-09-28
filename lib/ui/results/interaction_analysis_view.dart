@@ -14,7 +14,7 @@ import '../../src/models/chat_analysis.dart';
 import 'reciprocity_index.dart';
 import 'reply_matrix_table.dart';
 import 'response_time_chart.dart';
-import 'starters_enders_chart.dart';
+import 'starters_enders_view.dart';
 import 'treshold_slider.dart';
 
 /// Muestra los resultados del análisis de interacción.
@@ -78,7 +78,7 @@ class _InteractionAnalysisViewState extends State<InteractionAnalysisView> {
               },
             ),
             const SizedBox(height: 24),
-            StartersEndersChart(starters: starters, enders: enders),
+            StartersEndersView(starters: starters, enders: enders),
             const SizedBox(height: 24),
             ResponseTimeChart(responseTimes: responseTimes),
             const SizedBox(height: 24),

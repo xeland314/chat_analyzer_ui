@@ -1,8 +1,7 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
+import '../common/time_to_text.dart';
+import '../chat/chat_avatar.dart';
 
-/// Gráfico de barras que muestra el tiempo de respuesta promedio.
 class ResponseTimeChart extends StatelessWidget {
   final Map<String, Duration> responseTimes;
 
@@ -10,63 +9,63 @@ class ResponseTimeChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (responseTimes.isEmpty) return const SizedBox.shrink();
+
     final entries = responseTimes.entries.toList()
-      ..sort((a, b) => a.key.compareTo(b.key));
-    if (entries.isEmpty) return const SizedBox.shrink();
+      ..sort((a, b) => a.value.compareTo(b.value));
 
-    final barGroups = entries.asMap().entries.map((entry) {
-      final index = entry.key;
-      final durationInMinutes = entry.value.value.inSeconds / 60.0;
-
-      return BarChartGroupData(
-        x: index,
-        barRods: [
-          BarChartRodData(
-            toY: durationInMinutes,
-            color: Colors.teal,
-            width: 14,
-          ),
-        ],
-      );
-    }).toList();
+    final maxDuration = entries.isNotEmpty
+        ? entries.map((e) => e.value).reduce((a, b) => a > b ? a : b)
+        : Duration.zero;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Average Response Time (minutes)',
+          'Average Response Time',
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 16),
-        SizedBox(
-          height: 200,
-          child: BarChart(
-            BarChartData(
-              barGroups: barGroups,
-              titlesData: FlTitlesData(
-                rightTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                topTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (value, meta) {
-                      final index = value.toInt();
-                      if (index >= 0 && index < entries.length) {
-                        final name = entries[index].key;
-                        return Text(name.substring(0, min(name.length, 3)));
-                      }
-                      return const Text('');
-                    },
+        ...entries.map((entry) {
+          final durationInMinutes = entry.value.inSeconds / 60.0;
+          final proportion = maxDuration.inSeconds > 0
+              ? entry.value.inSeconds / maxDuration.inSeconds
+              : 0.0;
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              children: [
+                SizedBox(width: 50, child: authorAvatar(entry.key)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: FractionallySizedBox(
+                    alignment: Alignment.centerLeft,
+                    widthFactor: proportion,
+                    child: Container(
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: Colors.teal,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Center(
+                        child: Text(
+                          formatDuration(
+                            Duration(seconds: (durationInMinutes * 60).toInt()),
+                          ),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ),
+          );
+        }),
       ],
     );
   }
