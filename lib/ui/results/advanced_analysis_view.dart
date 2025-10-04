@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../src/models/chat_analysis.dart';
+import 'markov_chain_view.dart';
 import 'participant_stats_view.dart';
 import 'reply_matrix_table.dart';
 import 'response_time_chart.dart';
@@ -51,6 +52,8 @@ class AdvancedAnalysisView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             ReplyMatrixTable(replies: replies),
+            const SizedBox(height: 24),
+            MarkovChainView(replies: replies),
             const SizedBox(height: 24),
             StartersEndersView(starters: starters, enders: enders),
             const SizedBox(height: 24),

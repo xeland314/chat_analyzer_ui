@@ -178,8 +178,7 @@ class InteractionAnalyzer {
       final replier = currentMessage.author;
       final repliee = previousMessage.author;
 
-      // A reply only counts if it's from a different person.
-      if (replier != repliee) {
+
         final responseDuration = currentMessage.dateTime.difference(
           previousMessage.dateTime,
         );
@@ -191,12 +190,11 @@ class InteractionAnalyzer {
           replierMap[repliee] = (replierMap[repliee] ?? 0) + 1;
 
           // Add response time for averaging later.
-          responseTimes.putIfAbsent(replier, () => []).add(responseDuration);
+          if (replier != repliee) {
+            responseTimes.putIfAbsent(replier, () => []).add(responseDuration);
+          }
         }
-      }
     }
-
-    // Calculate average response time from the collected lists.
     final averageResponseTime = <String, Duration>{};
     responseTimes.forEach((participant, durations) {
       if (durations.isNotEmpty) {

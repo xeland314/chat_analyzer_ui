@@ -9,7 +9,8 @@ class InteractiveNetworkGraph extends StatefulWidget {
   const InteractiveNetworkGraph({super.key, required this.replies});
 
   @override
-  State<InteractiveNetworkGraph> createState() => _InteractiveNetworkGraphState();
+  State<InteractiveNetworkGraph> createState() =>
+      _InteractiveNetworkGraphState();
 }
 
 class _InteractiveNetworkGraphState extends State<InteractiveNetworkGraph> {
@@ -38,6 +39,11 @@ class _InteractiveNetworkGraphState extends State<InteractiveNetworkGraph> {
 
     for (final replier in widget.replies.keys) {
       for (final repliee in widget.replies[replier]!.keys) {
+        // **CORRECCIÓN: Ignorar lazos (self-loops)**
+        if (replier == repliee) {
+          continue;
+        }
+
         final count = widget.replies[replier]![repliee]!;
         if (count > 0) {
           var color = Colors.grey;
@@ -47,10 +53,13 @@ class _InteractiveNetworkGraphState extends State<InteractiveNetworkGraph> {
               color = Colors.teal;
             }
           }
-          graph.addEdge(nodes[replier]!, nodes[repliee]!,
-              paint: Paint()
-                ..color = color
-                ..strokeWidth = (count / 2).clamp(0.5, 5.0));
+          graph.addEdge(
+            nodes[replier]!,
+            nodes[repliee]!,
+            paint: Paint()
+              ..color = color
+              ..strokeWidth = (count / 2).clamp(0.5, 5.0),
+          );
         }
       }
     }
