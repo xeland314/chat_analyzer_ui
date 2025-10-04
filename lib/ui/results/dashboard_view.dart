@@ -4,6 +4,8 @@ import 'dashboard/equity_gauges.dart';
 import 'dashboard/influence_podium.dart';
 import 'dashboard/top_brokers_cards.dart';
 import 'dashboard/key_relationships.dart';
+import 'markov_chain_dashboard_view.dart';
+import '../../src/analysis/matrix_operations.dart';
 import 'dashboard/interactive_network_graph.dart';
 import 'response_time_chart.dart';
 import 'starters_enders_view.dart';
@@ -44,6 +46,10 @@ class DashboardView extends StatelessWidget {
         TopBrokersCards(replies: replies),
         const SizedBox(height: 24),
         KeyRelationships(replies: replies),
+        const SizedBox(height: 24),
+        MarkovChainDashboardView(
+          transitionMatrix: normalizeMatrix(replies),
+        ),
       ],
     );
   }
