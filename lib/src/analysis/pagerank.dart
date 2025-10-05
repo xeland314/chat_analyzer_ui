@@ -33,7 +33,7 @@ Map<String, double> calculatePageRank(
 
   // Initialize PageRank for all pages equally
   Map<String, double> pageRanks = {
-    for (var page in allPages) page: 1.0 / numPages
+    for (var page in allPages) page: 1.0 / numPages,
   };
 
   // Create a map for incoming links to easily calculate contributions
@@ -80,4 +80,51 @@ Map<String, double> calculatePageRank(
   }
 
   return pageRanks;
+}
+
+Map<String, double> calculateWeightedPageRank(
+  Map<String, Map<String, int>> weightedGraph, {
+  double dampingFactor = 0.85,
+  double epsilon = 0.0001,
+  int maxIterations = 100,
+}) {
+  final allPages = weightedGraph.keys.toSet();
+  for (final edges in weightedGraph.values) {
+    allPages.addAll(edges.keys);
+  }
+
+  final numPages = allPages.length;
+  Map<String, double> pageRanks = {
+    for (var page in allPages) page: 1.0 / numPages,
+  };
+
+  for (int i = 0; i < maxIterations; i++) {
+    Map<String, double> newRanks = {};
+    double maxChange = 0.0;
+
+    for (var page in allPages) {
+      double rankSum = 0.0;
+
+      for (var incoming in allPages) {
+        final weightMap = weightedGraph[incoming] ?? {};
+        final totalWeight = weightMap.values.fold<int>(0, (a, b) => a + b);
+        final weightToPage = weightMap[page] ?? 0;
+
+        if (totalWeight > 0) {
+          rankSum += pageRanks[incoming]! * (weightToPage / totalWeight);
+        }
+      }
+
+      final newRank = (1 - dampingFactor) / numPages + dampingFactor * rankSum;
+      newRanks[page] = newRank;
+      maxChange = max(maxChange, (newRank - pageRanks[page]!).abs());
+    }
+
+    pageRanks = newRanks;
+    if (maxChange < epsilon) break;
+  }
+
+  // Normalizar
+  final sum = pageRanks.values.reduce((a, b) => a + b);
+  return {for (var e in pageRanks.entries) e.key: e.value / sum};
 }

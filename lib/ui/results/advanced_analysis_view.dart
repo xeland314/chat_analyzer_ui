@@ -1,35 +1,18 @@
 import 'package:flutter/material.dart';
+import '../common/info_wrapper.dart';
 import '../../src/models/chat_analysis.dart';
 import 'markov_chain_view.dart';
-import 'participant_stats_view.dart';
 import 'reply_matrix_table.dart';
-import 'response_time_chart.dart';
-import 'starters_enders_view.dart';
 
 class AdvancedAnalysisView extends StatelessWidget {
   final ChatAnalysis analysis;
-  final double displayCount;
-  final Set<String> ignoredWords;
 
-  const AdvancedAnalysisView({
-    super.key,
-    required this.analysis,
-    required this.displayCount,
-    required this.ignoredWords,
-  });
+  const AdvancedAnalysisView({super.key, required this.analysis});
 
   @override
   Widget build(BuildContext context) {
     final metrics = analysis.interactionAnalyzer.calculateInteractionMetrics();
     final replies = metrics.whoRepliesToWhom;
-    final conversations = analysis.interactionAnalyzer.segmentConversations();
-    final starters = analysis.interactionAnalyzer.calculateConversationStarters(
-      conversations,
-    );
-    final enders = analysis.interactionAnalyzer.calculateConversationEnders(
-      conversations,
-    );
-    final responseTimes = metrics.averageResponseTime;
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -43,21 +26,20 @@ class AdvancedAnalysisView extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const Divider(),
-            ...analysis.participants.map(
-              (p) => ParticipantStatsView(
-                participant: p,
-                displayCount: displayCount.round(),
-                ignoredWords: ignoredWords,
-              ),
+            const SizedBox(height: 24),
+            InfoWidgetWrapper(
+              title: 'Reply Matrix',
+              infoContent:
+                  'This table shows the number of replies each participant received from others.',
+              child: ReplyMatrixTable(replies: replies),
             ),
             const SizedBox(height: 24),
-            ReplyMatrixTable(replies: replies),
-            const SizedBox(height: 24),
-            MarkovChainView(replies: replies),
-            const SizedBox(height: 24),
-            StartersEndersView(starters: starters, enders: enders),
-            const SizedBox(height: 24),
-            ResponseTimeChart(responseTimes: responseTimes),
+            InfoWidgetWrapper(
+              title: 'Markov Chain',
+              infoContent:
+                  'This table shows the probability of a participant replying to another participant.',
+              child: MarkovChainView(replies: replies),
+            ),
           ],
         ),
       ),

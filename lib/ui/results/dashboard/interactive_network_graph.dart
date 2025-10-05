@@ -16,20 +16,12 @@ class InteractiveNetworkGraph extends StatefulWidget {
 class _InteractiveNetworkGraphState extends State<InteractiveNetworkGraph> {
   Node? _selectedNode;
 
-  Map<String, List<String>> _createGraphData() {
-    final graphData = <String, List<String>>{};
-    widget.replies.forEach((replier, repliees) {
-      graphData[replier] = repliees.keys.toList();
-    });
-    return graphData;
-  }
-
   @override
   Widget build(BuildContext context) {
     final graph = Graph();
     final nodes = <String, Node>{};
 
-    final pageRanks = calculatePageRank(_createGraphData());
+    final pageRanks = calculateWeightedPageRank(widget.replies);
     final maxRank = pageRanks.values.reduce((a, b) => a > b ? a : b);
     final minRank = pageRanks.values.reduce((a, b) => a < b ? a : b);
 

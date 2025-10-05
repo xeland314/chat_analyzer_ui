@@ -7,18 +7,9 @@ class InfluencePodium extends StatelessWidget {
 
   const InfluencePodium({super.key, required this.replies});
 
-  Map<String, List<String>> _createGraph() {
-    final graph = <String, List<String>>{};
-    replies.forEach((replier, repliees) {
-      graph[replier] = repliees.keys.toList();
-    });
-    return graph;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final graph = _createGraph();
-    final pageRanks = calculatePageRank(graph);
+    final pageRanks = calculateWeightedPageRank(replies);
     final sortedRanks = pageRanks.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 

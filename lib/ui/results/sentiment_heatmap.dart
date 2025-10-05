@@ -6,6 +6,9 @@ import 'chart_legend_item.dart';
 class SentimentHeatmap extends StatelessWidget {
   final Map<DateTime, double> data;
   final int year;
+  final int neutralSentimentValue = 9;
+  final int positiveSentimentValue = 1;
+  final int negativeSentimentValue = -1;
 
   const SentimentHeatmap({super.key, required this.data, required this.year});
 
@@ -32,11 +35,11 @@ class SentimentHeatmap extends StatelessWidget {
     final sentimentCategoryPerDay = data.map((date, score) {
       int category;
       if (score > 0.05) {
-        category = 1; // Positive
+        category = positiveSentimentValue; // Positive
       } else if (score < -0.05) {
-        category = -1; // Negative
+        category = negativeSentimentValue; // Negative
       } else {
-        category = 9; // Neutral
+        category = neutralSentimentValue; // Neutral
       }
       return MapEntry(date, category);
     });
@@ -67,10 +70,10 @@ class SentimentHeatmap extends StatelessWidget {
                 colorMode: ColorMode.color,
                 showText: false,
                 showColorTip: true,
-                colorsets: const {
-                  -1: Colors.red,
-                  1: Colors.green,
-                  9: Colors.grey,
+                colorsets: {
+                  negativeSentimentValue: Colors.red,
+                  positiveSentimentValue: Colors.green,
+                  neutralSentimentValue: Colors.grey,
                 },
                 onClick: (date) {
                   final score = data[date] ?? 0.0;
@@ -83,7 +86,7 @@ class SentimentHeatmap extends StatelessWidget {
 
                   final snackBar = SnackBar(
                     content: Text(
-                      '$sentimentText sentiment (${score.toStringAsFixed(2)}) on this day',
+                      '$sentimentText sentiment (${score.toStringAsFixed(2)}) on ${date.toString().split(' ').first}.',
                     ),
                     action: SnackBarAction(
                       label: 'Close',

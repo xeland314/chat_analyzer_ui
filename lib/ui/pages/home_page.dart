@@ -131,17 +131,20 @@ class _HomePageState extends State<HomePage> {
               icon: const Icon(Icons.chat),
               onPressed: _viewFullChat,
               tooltip: 'View Full Chat',
+              color: Colors.white,
             ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: _openDisplayOptions,
             tooltip: 'Display Options',
+            color: Colors.white,
           ),
           if (_analysis != null)
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: _resetAnalysis,
               tooltip: 'Reset Analysis',
+              color: Colors.white,
             ),
           IconButton(
             icon: const Icon(Icons.bug_report),
@@ -152,6 +155,7 @@ class _HomePageState extends State<HomePage> {
               );
             },
             tooltip: 'View Logs',
+            color: Colors.white,
           ),
         ],
       ),

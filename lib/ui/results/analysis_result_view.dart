@@ -6,15 +6,8 @@ import '../exports/export_button.dart';
 
 class AdvancedAnalysisPage extends StatelessWidget {
   final ChatAnalysis analysis;
-  final double displayCount;
-  final Set<String> ignoredWords;
 
-  const AdvancedAnalysisPage({
-    super.key,
-    required this.analysis,
-    required this.displayCount,
-    required this.ignoredWords,
-  });
+  const AdvancedAnalysisPage({super.key, required this.analysis});
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +15,7 @@ class AdvancedAnalysisPage extends StatelessWidget {
       appBar: AppBar(title: const Text('Advanced Analysis')),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
-        children: [
-          AdvancedAnalysisView(
-            analysis: analysis,
-            displayCount: displayCount,
-            ignoredWords: ignoredWords,
-          ),
-        ],
+        children: [AdvancedAnalysisView(analysis: analysis)],
       ),
     );
   }
@@ -56,18 +43,19 @@ class AnalysisResultView extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: ListView(
             children: [
-              DashboardView(analysis: analysis),
+              DashboardView(
+                analysis: analysis,
+                displayCount: displayCount,
+                ignoredWords: ignoredWords,
+              ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AdvancedAnalysisPage(
-                        analysis: analysis,
-                        displayCount: displayCount,
-                        ignoredWords: ignoredWords,
-                      ),
+                      builder: (context) =>
+                          AdvancedAnalysisPage(analysis: analysis),
                     ),
                   );
                 },

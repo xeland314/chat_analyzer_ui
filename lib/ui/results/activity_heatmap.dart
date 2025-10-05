@@ -45,7 +45,9 @@ class ActivityHeatmap extends StatelessWidget {
                   onClick: (date) {
                     final count = data[date] ?? 0;
                     final snackBar = SnackBar(
-                      content: Text('$count messages on this day'),
+                      content: Text(
+                        '$count messages on ${date.toString().split(' ').first}.',
+                      ),
                       action: SnackBarAction(
                         label: 'Close',
                         onPressed: () {

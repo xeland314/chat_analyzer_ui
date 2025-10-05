@@ -30,19 +30,9 @@ class StartersEndersView extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 16),
-        _buildChart(
-          context,
-          'Starters',
-          sortedStarters,
-          Colors.teal,
-        ),
+        _buildChart(context, 'Starters', sortedStarters, Colors.teal),
         const SizedBox(height: 16),
-        _buildChart(
-          context,
-          'Enders',
-          sortedEnders,
-          Colors.teal.shade300,
-        ),
+        _buildChart(context, 'Enders', sortedEnders, Colors.teal),
       ],
     );
   }
@@ -55,16 +45,14 @@ class StartersEndersView extends StatelessWidget {
   ) {
     if (participants.isEmpty) return const SizedBox.shrink();
 
-    final maxValue =
-        participants.map((e) => e.value).reduce((a, b) => a > b ? a : b);
+    final maxValue = participants
+        .map((e) => e.value)
+        .reduce((a, b) => a > b ? a : b);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text(title, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
         ...participants.map((entry) {
           final proportion = maxValue > 0 ? entry.value / maxValue : 0.0;
