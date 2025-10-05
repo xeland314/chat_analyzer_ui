@@ -1,38 +1,61 @@
-# Analizador de Chats (UI)
+# Chat Analyzer UI (Analizador de Chats)
 
-Una aplicación de Flutter para analizar historiales de chat, proveyendo estadísticas detalladas y visualizaciones sobre las interacciones, sentimientos y patrones de comunicación de los participantes.
+Una aplicación multiplataforma desarrollada con Flutter para importar, procesar y analizar historiales de chat (como los de WhatsApp), proveyendo estadísticas detalladas y visualizaciones sobre las interacciones, sentimientos y patrones de comunicación de los participantes.
 
-## Funcionalidades
+## Funcionalidades Clave
 
-La aplicación ofrece un análisis completo de los archivos de chat, desglosado en varias áreas clave:
+### 1. Entrada de Datos y Compatibilidad
 
-### 1. Estadísticas Generales (Por Participante)
+- **Multiplataforma:** Totalmente funcional en Android, iOS, Linux, Windows, macOS y Web.
+- **Importación Flexible:** Carga archivos de historial de chat en formato `.txt` usando:
+    - **Selector de Archivos:** Selecciona el archivo desde el almacenamiento de tu dispositivo.
+    - **Arrastrar y Soltar (Drag-and-Drop):** Arrastra el archivo directamente a la ventana de la aplicación (en plataformas de escritorio).
+    - **Compartir desde otra App (Share Intent):** Abre archivos de chat directamente desde otras aplicaciones (ej. WhatsApp) en dispositivos móviles.
+- **Análisis Inteligente (Parsing):** La aplicación procesa el archivo de chat para identificar:
+    - Mensajes, autores, fechas y horas.
+    - Emojis y enlaces.
+    - Mensajes de sistema (ej. "Usuario se unió al grupo").
 
-- **Conteo de Mensajes**: Número total de mensajes enviados por cada participante.
-- **Conteo de Multimedia**: Número total de archivos multimedia (imágenes, videos, etc.) compartidos.
-- **Frecuencia de Palabras**: Una lista de las palabras más usadas, con la habilidad de ignorar "stopwords" (palabras comunes) y añadir palabras personalizadas a la lista de ignorados.
-- **Frecuencia de Emojis**: Una lista de los emojis más utilizados.
+### 2. Métricas de Análisis Principales
 
-### 2. Análisis Temporal (Por Participante)
+- **Estadísticas Generales (por usuario):**
+    - **Conteo de Mensajes y Palabras:** Total de mensajes y palabras enviadas.
+    - **Conteo de Emojis y Enlaces:** Total de emojis y enlaces compartidos.
+    - **Nube de Palabras:** Una representación visual de las palabras más frecuentes, con filtrado avanzado de "stopwords" (palabras comunes) en inglés y español.
+    - **Frecuencia de Emojis:** Una lista de los emojis más utilizados.
+- **Análisis Temporal:**
+    - **Mapa de Calor de Actividad:** Un mapa de calor estilo calendario de GitHub que visualiza la frecuencia de mensajes a lo largo del año.
+    - **Actividad por Hora:** Un gráfico de barras que muestra las horas del día más activas para el envío de mensajes.
+- **Análisis de Sentimiento:**
+    - **Sentimiento por Mensaje:** Cada mensaje es analizado para determinar si su sentimiento es positivo, negativo o neutral.
+    - **Mapa de Calor de Sentimiento:** Una vista de calendario que muestra el sentimiento promedio de cada día, coloreado desde el rojo (negativo) al verde (positivo).
 
-- **Mapa de Calor de Actividad**: Un mapa de calor estilo calendario de GitHub que visualiza la frecuencia de mensajes a lo largo del año.
-- **Mapa de Calor de Sentimiento**: Un mapa de calor similar que muestra el sentimiento promedio de cada día, coloreado desde el rojo (negativo) al verde (positivo).
-- **Actividad por Hora**: Un gráfico de barras que muestra las horas del día más activas para el envío de mensajes.
-- **Filtro Anual**: Todos los análisis de mapas de calor pueden ser filtrados por año usando un simple menú desplegable.
+### 3. Análisis de Interacción y Redes Sociales
 
-### 3. Análisis de Interacción (Global)
+Esta sección analiza la dinámica de la conversación como si fuera una red social.
 
-Esta sección analiza la dinámica de la conversación entre todos los participantes.
+- **Detección de Conversaciones:**
+    - **Umbral Automático:** La aplicación detecta automáticamente el lapso de tiempo natural que separa una conversación de la siguiente.
+    - **Ajuste Interactivo:** Ajusta manualmente el umbral de conversación con un deslizador para ver cómo cambia el análisis en tiempo real.
+- **Métricas de Interacción:**
+    - **Iniciadores y Finalizadores de Conversación:** Muestra quién tiende a iniciar y a concluir las conversaciones.
+    - **Tiempo de Respuesta Promedio:** Compara cuán rápido responde típicamente cada participante.
+- **Análisis de Red Basado en Grafos:**
+    - **Matriz de Respuestas:** Una tabla detallada que muestra quién responde a quién y con qué frecuencia.
+    - **PageRank:** Identifica a los participantes más "influyentes" en la conversación, basándose en quién recibe respuestas de otros miembros influyentes.
+    - **Centralidad de Intermediación (Betweenness Centrality):** Mide la frecuencia con la que un participante actúa como un "puente" o "conector" en el flujo de comunicación entre otros miembros. Esto ayuda a identificar a los conectores clave en el grupo.
 
-- **Umbral de Conversación Automático**: La aplicación detecta automáticamente el lapso de tiempo "natural" que separa una conversación de la siguiente (ej: 45 minutos de inactividad).
-- **Ajuste de Umbral Interactivo**: Puedes ajustar manualmente este umbral de conversación con un slider para ver cómo cambia el análisis en tiempo real.
-- **Iniciadores y Finalizadores de Conversaciones**: Un gráfico de barras agrupado que muestra quién tiende a iniciar y quién tiende a terminar las conversaciones más a menudo.
-- **Tiempo de Respuesta Promedio**: Un gráfico de barras que compara cuán rápido responde típicamente cada participante, medido en minutos.
-- **Matriz de Respuestas**: Una tabla de datos detallada que muestra quién responde a quién y la frecuencia de dichas respuestas.
+### 4. Visualizaciones y Exportación
+
+- **Gráficos Interactivos:** La mayoría de las métricas se presentan usando gráficos claros e interactivos de la librería `fl_chart`.
+- **Visualizador de Grafos:** Una representación visual de la red de interacción usando la librería `graphview`.
+- **Exportación como Imagen:** Comparte o guarda los resultados del análisis como una imagen.
 
 ## Stack Tecnológico
 
 - **Framework**: Flutter
 - **Lenguaje**: Dart
-- **Gráficos**: `fl_chart`
-- **Mapas de Calor**: `flutter_heatmap_calendar`
+- **Dependencias**:
+    - **UI y Gráficos**: `fl_chart`, `flutter_heatmap_calendar`
+    - **Manejo de Archivos**: `file_picker`, `desktop_drop`, `receive_sharing_intent`
+    - **Análisis**: `dart_sentiment`, `graphview`
