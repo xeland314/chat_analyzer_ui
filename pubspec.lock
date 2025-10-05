@@ -159,6 +159,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_force_directed_graph:
+    dependency: "direct main"
+    description:
+      name: flutter_force_directed_graph
+      sha256: "5024c7e1854341f6dbca656d23efa387c40986599d6d613b4b55f0abffde0416"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.8"
   flutter_heatmap_calendar:
     dependency: "direct main"
     description:
@@ -193,14 +201,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  graphview:
-    dependency: "direct main"
-    description:
-      name: graphview
-      sha256: bdba183583b23c30c71edea09ad5f0beef612572d3e39e855467a925bd08392f
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
   intl:
     dependency: "direct main"
     description:

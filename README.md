@@ -48,7 +48,7 @@ This section analyzes the dynamics of the conversation as a social network.
 ### 4. Visualizations & Export
 
 - **Interactive Charts:** Most metrics are presented using clear, interactive charts and graphs from the `fl_chart` library.
-- **Graph Visualizer:** A visual representation of the interaction network using the `graphview` library.
+- **Graph Visualizer:** A visual representation of the interaction network using the `flutter_force_directed_graph` library.
 - **Image Export:** Share or save the analysis results as a convenient image.
 
 ## Tech Stack
@@ -58,4 +58,4 @@ This section analyzes the dynamics of the conversation as a social network.
 - **Dependencies**:
     - **UI & Charting**: `fl_chart`, `flutter_heatmap_calendar`
     - **File Handling**: `file_picker`, `desktop_drop`, `receive_sharing_intent`
-    - **Analysis**: `dart_sentiment`, `graphview`
+    - **Analysis**: `dart_sentiment`, `flutter_force_directed_graph`

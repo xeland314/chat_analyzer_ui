@@ -48,7 +48,7 @@ Esta sección analiza la dinámica de la conversación como si fuera una red soc
 ### 4. Visualizaciones y Exportación
 
 - **Gráficos Interactivos:** La mayoría de las métricas se presentan usando gráficos claros e interactivos de la librería `fl_chart`.
-- **Visualizador de Grafos:** Una representación visual de la red de interacción usando la librería `graphview`.
+- **Visualizador de Grafos:** Una representación visual de la red de interacción usando la librería `flutter_force_directed_graph`.
 - **Exportación como Imagen:** Comparte o guarda los resultados del análisis como una imagen.
 
 ## Stack Tecnológico
@@ -58,4 +58,4 @@ Esta sección analiza la dinámica de la conversación como si fuera una red soc
 - **Dependencias**:
     - **UI y Gráficos**: `fl_chart`, `flutter_heatmap_calendar`
     - **Manejo de Archivos**: `file_picker`, `desktop_drop`, `receive_sharing_intent`
-    - **Análisis**: `dart_sentiment`, `graphview`
+    - **Análisis**: `dart_sentiment`, `flutter_force_directed_graph`
