@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Lanza una URL en el navegador.
 Future<void> _launchUrl(String url) async {
@@ -14,6 +15,7 @@ class BuyMeACookieButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return InkWell(
       onTap: () => _launchUrl("https://www.buymeacoffee.com/xeland314"),
       child: ClipRRect(
@@ -22,7 +24,7 @@ class BuyMeACookieButton extends StatelessWidget {
           "assets/buy-me-a-cookie.png",
           height: 48,
           semanticLabel:
-              'Buy me a cookie at https://www.buymeacoffee.com/xeland314',
+              appLocalizations.credits_modal_buy_me_a_cookie_semantic_label,
         ),
       ),
     );
@@ -34,12 +36,13 @@ class BuyMeACoffeeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return InkWell(
       onTap: () => _launchUrl("https://ko-fi.com/C0C41DCI4T"),
       child: Image.asset(
         "assets/buy-me-a-coffee.png",
         height: 48,
-        semanticLabel: 'Buy Me a Coffee at ko-fi.com/C0C41DCI4T',
+        semanticLabel: appLocalizations.credits_modal_buy_me_a_coffee_semantic_label,
       ),
     );
   }
@@ -67,9 +70,10 @@ class CreditsModal extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final isSmallScreen = screenWidth < 400;
     final horizontalPadding = isSmallScreen ? 0.0 : 24.0;
+    final appLocalizations = AppLocalizations.of(context)!;
 
     return AlertDialog(
-      title: const Text('Créditos'),
+      title: Text(appLocalizations.credits_modal_title),
       contentPadding: EdgeInsets.zero,
       content: SingleChildScrollView(
         child: Padding(
@@ -81,12 +85,12 @@ class CreditsModal extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                'Desarrollado por xeland314',
+              Text(
+                appLocalizations.credits_modal_intro,
                 textAlign: TextAlign.center,
               ),
-              const Text(
-                '(Christopher Villamarín), 2025.',
+              Text(
+                appLocalizations.credits_modal_my_name,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -96,11 +100,11 @@ class CreditsModal extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Icon(Icons.code), // Ícono de GitHub
                     SizedBox(width: 8),
                     Text(
-                      'Perfil de GitHub',
+                      appLocalizations.credits_modal_github_profile,
                       style: TextStyle(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
@@ -116,11 +120,11 @@ class CreditsModal extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Icon(Icons.link), // Ícono de Portafolio/Link
                     SizedBox(width: 8),
                     Text(
-                      'Portafolio',
+                      appLocalizations.credits_modal_portfolio,
                       style: TextStyle(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
@@ -130,8 +134,8 @@ class CreditsModal extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
-              const Text(
-                'Donaciones:',
+              Text(
+                appLocalizations.credits_modal_donations,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
@@ -142,7 +146,7 @@ class CreditsModal extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text('Cerrar'),
+          child: Text(appLocalizations.credits_modal_close_button),
           onPressed: () {
             Navigator.of(context).pop();
           },

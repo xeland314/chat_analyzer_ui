@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Logger global para guardar mensajes de la app
 class Log {
@@ -32,8 +33,9 @@ class LogViewerDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: const Text("Application Log"),
+      title: Text(appLocalizations.log_title),
       content: SizedBox(
         width: double.maxFinite,
         height: 400,
@@ -41,7 +43,7 @@ class LogViewerDialog extends StatelessWidget {
           valueListenable: Log.notifier,
           builder: (context, messages, _) {
             if (messages.isEmpty) {
-              return const Center(child: Text("No logs yet"));
+              return Center(child: Text(appLocalizations.log_empty));
             }
             return ListView.builder(
               itemCount: messages.length,
@@ -61,15 +63,15 @@ class LogViewerDialog extends StatelessWidget {
             final logs = Log.messages.join('\n');
             Clipboard.setData(ClipboardData(text: logs));
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Logs copied to clipboard')),
+              SnackBar(content: Text(appLocalizations.reply_matrix_table_copied_snackbar)),
             );
           },
-          child: const Text("Copy"),
+          child: Text(appLocalizations.reply_matrix_table_copy_button),
         ),
-        TextButton(onPressed: () => Log.clear(), child: const Text("Clear")),
+        TextButton(onPressed: () => Log.clear(), child: Text(appLocalizations.home_action_reset)),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text("Close"),
+          child: Text(appLocalizations.credits_modal_close_button),
         ),
       ],
     );

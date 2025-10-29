@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../src/analysis/matrix_operations.dart';
 import '../common/emoji_rich_text.dart';
+import '../../l10n/app_localizations.dart';
 
 class ReceiverSimilarityView extends StatelessWidget {
   final Map<String, Map<String, int>> replies;
@@ -9,6 +10,7 @@ class ReceiverSimilarityView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final similarityMatrix = calculateCosineSimilarityMatrix(replies, false);
     final participants = similarityMatrix.keys.toList()..sort();
 
@@ -17,7 +19,7 @@ class ReceiverSimilarityView extends StatelessWidget {
       children: [
         const SizedBox(height: 24),
         Text(
-          'Receiver Similarity (Similar Roles)',
+          appLocalizations.receiver_similarity_view_title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
@@ -25,7 +27,7 @@ class ReceiverSimilarityView extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: DataTable(
             columns: [
-              const DataColumn(label: Text('Participant \\ Participant')),
+              DataColumn(label: Text(appLocalizations.receiver_similarity_view_participant_participant)),
               ...participants.map(
                 (p) => DataColumn(
                   label: emojiRichText(

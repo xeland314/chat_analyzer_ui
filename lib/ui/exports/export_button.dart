@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'export_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class ExportButton extends StatelessWidget {
   final GlobalKey repaintBoundaryKey;
@@ -13,11 +14,12 @@ class ExportButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return FloatingActionButton(
       onPressed: () {
         ExportService.exportAndShareWidget(
           repaintBoundaryKey,
-          'C.A. xeland314',
+          appLocalizations.name,
           fileName,
           context,
         );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'credits_modal.dart';
 import 'disclaimer_modal.dart';
+import '../../l10n/app_localizations.dart';
 
 class InitialView extends StatelessWidget {
   final VoidCallback onFilePick;
@@ -9,6 +10,8 @@ class InitialView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -16,17 +19,17 @@ class InitialView extends StatelessWidget {
         children: [
           const Icon(Icons.cloud_upload_outlined, size: 80, color: Colors.grey),
           const SizedBox(height: 16),
-          const Text(
-            'Arrastra y suelta un archivo .txt aquí',
+          Text(
+            appLocalizations.initial_view_message_1,
             style: TextStyle(fontSize: 18),
           ),
           const SizedBox(height: 16),
-          const Text('o'),
+          Text(appLocalizations.initial_view_message_2),
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: onFilePick,
             icon: const Icon(Icons.upload_file),
-            label: const Text('Cargar archivo de chat (.txt)'),
+            label: Text(appLocalizations.initial_view_message_3),
           ),
           const SizedBox(height: 32),
           const DisclaimerModal(),
@@ -40,7 +43,7 @@ class InitialView extends StatelessWidget {
                 },
               );
             },
-            child: const Text('Créditos'),
+            child: Text(appLocalizations.initial_view_credits_button),
           ),
         ],
       ),

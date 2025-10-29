@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../src/analysis/matrix_operations.dart';
 import '../common/emoji_rich_text.dart';
+import '../../l10n/app_localizations.dart';
 
 class MatrixSquaredView extends StatelessWidget {
   final Map<String, Map<String, int>> replies;
@@ -9,6 +10,7 @@ class MatrixSquaredView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final matrixSquared = squareMatrix(replies);
     final normalizedMatrix = normalizeMatrix(matrixSquared);
     final participants = normalizedMatrix.keys.toList()..sort();
@@ -18,7 +20,7 @@ class MatrixSquaredView extends StatelessWidget {
       children: [
         const SizedBox(height: 24),
         Text(
-          'Normalized Indirect Influence (M²)',
+          appLocalizations.matrix_squared_view_title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
@@ -26,7 +28,7 @@ class MatrixSquaredView extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: DataTable(
             columns: [
-              const DataColumn(label: Text('From \ To')),
+              DataColumn(label: Text(appLocalizations.matrix_squared_view_from_to)),
               ...participants.map(
                 (p) => DataColumn(
                   label: emojiRichText(

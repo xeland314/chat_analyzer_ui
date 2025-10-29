@@ -5,6 +5,7 @@ import 'frecuency_list_view.dart';
 import 'temporal_analysis_view.dart';
 import 'sentiment_bar_chart.dart';
 import 'hourly_activity_chart.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Muestra estadísticas de un participante individual del chat.
 ///
@@ -24,6 +25,7 @@ class ParticipantStatsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final filteredWordEntries =
         participant.wordFrequency.entries
             .where((entry) => !ignoredWords.contains(entry.key))
@@ -43,7 +45,7 @@ class ParticipantStatsView extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text(
-          '${participant.messageCount} messages, ${participant.multimediaCount} multimedia files',
+          appLocalizations.participant_stats_view_subtitle(participant.messageCount.toString(), participant.multimediaCount.toString()),
         ),
         children: [
           Padding(
@@ -53,10 +55,10 @@ class ParticipantStatsView extends StatelessWidget {
               children: [
                 SentimentBarChart(sentimentData: participant.sentimentAnalysis),
                 const SizedBox(height: 16),
-                FrequencyListView(title: 'Most Common Words', data: topWords),
+                FrequencyListView(title: appLocalizations.participant_stats_view_most_common_words, data: topWords),
                 const SizedBox(height: 16),
                 FrequencyListView(
-                  title: 'Most Common Emojis',
+                  title: appLocalizations.participant_stats_view_most_common_emojis,
                   data: participant.getMostCommonEmojis(displayCount),
                 ),
                 HourlyActivityChart(data: participant.messageCountByHour),

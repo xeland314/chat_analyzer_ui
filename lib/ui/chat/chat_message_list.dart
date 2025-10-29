@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'chat_message.dart';
 import '../../src/models/chat_message.dart';
+import '../../l10n/app_localizations.dart';
 
 class ChatMessageList extends StatelessWidget {
   final List<ChatMessage> messages;
@@ -14,8 +15,9 @@ class ChatMessageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     if (messages.isEmpty) {
-      return const Center(child: Text('No messages on this date.'));
+      return Center(child: Text(appLocalizations.chat_message_list_no_messages));
     }
 
     return ListView.builder(

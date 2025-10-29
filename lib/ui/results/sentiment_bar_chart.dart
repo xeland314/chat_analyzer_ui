@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'chart_legend_item.dart';
+import '../../l10n/app_localizations.dart';
 
 class SentimentBarChart extends StatelessWidget {
   final Map<String, int> sentimentData;
@@ -8,6 +9,7 @@ class SentimentBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final positive = sentimentData['Positive']!;
     final negative = sentimentData['Negative']!;
     final neutral = sentimentData['Neutral']!;
@@ -23,7 +25,7 @@ class SentimentBarChart extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Sentiment Analysis',
+          appLocalizations.sentiment_bar_chart_title,
           style: Theme.of(context).textTheme.titleLarge,
           overflow: TextOverflow.ellipsis,
         ),
@@ -39,7 +41,7 @@ class SentimentBarChart extends StatelessWidget {
                     flex: (positivePercent * 100).round(),
                     child: Tooltip(
                       message:
-                          'Positive: ${(positivePercent * 100).toStringAsFixed(2)}%',
+                          appLocalizations.sentiment_bar_chart_positive_tooltip((positivePercent * 100).toStringAsFixed(2)),
                       child: Container(
                         color: Colors.green,
                         child: Center(
@@ -61,7 +63,7 @@ class SentimentBarChart extends StatelessWidget {
                     flex: (negativePercent * 100).round(),
                     child: Tooltip(
                       message:
-                          'Negative: ${(negativePercent * 100).toStringAsFixed(2)}%',
+                          appLocalizations.sentiment_bar_chart_negative_tooltip((negativePercent * 100).toStringAsFixed(2)),
                       child: Container(
                         color: Colors.red,
                         child: Center(
@@ -83,7 +85,7 @@ class SentimentBarChart extends StatelessWidget {
                     flex: (neutralPercent * 100).round(),
                     child: Tooltip(
                       message:
-                          'Neutral: ${(neutralPercent * 100).toStringAsFixed(2)}%',
+                          appLocalizations.sentiment_bar_chart_neutral_tooltip((neutralPercent * 100).toStringAsFixed(2)),
                       child: Container(
                         color: Colors.grey,
                         child: Center(
@@ -109,10 +111,10 @@ class SentimentBarChart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
-              child: ChartLegendItem(Colors.green, '$positive positive'),
+              child: ChartLegendItem(Colors.green, appLocalizations.sentiment_bar_chart_positive_legend(positive.toString())),
             ),
-            Expanded(child: ChartLegendItem(Colors.red, '$negative negative')),
-            Expanded(child: ChartLegendItem(Colors.grey, '$neutral neutral')),
+            Expanded(child: ChartLegendItem(Colors.red, appLocalizations.sentiment_bar_chart_negative_legend(negative.toString()))),
+            Expanded(child: ChartLegendItem(Colors.grey, appLocalizations.sentiment_bar_chart_neutral_legend(neutral.toString()))),
           ],
         ),
       ],

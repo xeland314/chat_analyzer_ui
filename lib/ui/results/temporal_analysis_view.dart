@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../src/models/chat_participant.dart';
 import 'sentiment_heatmap.dart';
 import 'activity_heatmap.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Muestra el análisis temporal de la actividad y el sentimiento.
 ///
@@ -37,6 +38,7 @@ class _TemporalAnalysisViewState extends State<TemporalAnalysisView> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     if (_availableYears.isEmpty &&
         widget.participant.messageCountByHour.isEmpty) {
       return const SizedBox.shrink();
@@ -52,7 +54,7 @@ class _TemporalAnalysisViewState extends State<TemporalAnalysisView> {
           children: [
             Expanded(
               child: Text(
-                'Temporal Analysis',
+                appLocalizations.temporal_analysis_view_title,
                 style: Theme.of(context).textTheme.headlineSmall,
                 overflow: TextOverflow.ellipsis,
               ),

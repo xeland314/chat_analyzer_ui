@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../chat/chat_avatar.dart';
+import '../../../l10n/app_localizations.dart';
 
 class KeyRelationships extends StatelessWidget {
   final Map<String, Map<String, int>> replies;
@@ -8,22 +9,23 @@ class KeyRelationships extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final relationships = _calculateKeyRelationships();
+    final appLocalizations = AppLocalizations.of(context)!;
+    final relationships = _calculateKeyRelationships(appLocalizations);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Key Relationships',
+          appLocalizations.key_relationships_title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 16),
-        ...relationships.map((rel) => _buildRelationshipCard(rel)),
+        ...relationships.map((rel) => _buildRelationshipCard(rel, appLocalizations)),
       ],
     );
   }
 
-  List<_Relationship> _calculateKeyRelationships() {
+  List<_Relationship> _calculateKeyRelationships(AppLocalizations appLocalizations) {
     final relationships = <_Relationship>[];
     final participants = replies.keys.toList();
 
@@ -41,9 +43,9 @@ class KeyRelationships extends StatelessWidget {
         final reciprocity = (p1_to_p2 < p2_to_p1 ? p1_to_p2 : p2_to_p1) / (p1_to_p2 > p2_to_p1 ? p1_to_p2 : p2_to_p1);
 
         if (reciprocity > 0.8 && total > 10) {
-          relationships.add(_Relationship(p1, p2, 'Strong Pair', reciprocity));
+          relationships.add(_Relationship(p1, p2, appLocalizations.key_relationships_strong_pair, reciprocity));
         } else if (reciprocity < 0.2 && total > 10) {
-          relationships.add(_Relationship(p1, p2, 'Monologue', reciprocity));
+          relationships.add(_Relationship(p1, p2, appLocalizations.key_relationships_monologue, reciprocity));
         }
       }
     }
@@ -51,7 +53,7 @@ class KeyRelationships extends StatelessWidget {
     return relationships;
   }
 
-  Widget _buildRelationshipCard(_Relationship relationship) {
+  Widget _buildRelationshipCard(_Relationship relationship, AppLocalizations appLocalizations) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: Padding(
@@ -77,7 +79,7 @@ class KeyRelationships extends StatelessWidget {
             const SizedBox(height: 4),
             Center(
               child: Text(
-                'Reciprocity: ${relationship.reciprocity.toStringAsFixed(2)}',
+                appLocalizations.key_relationships_reciprocity(relationship.reciprocity.toStringAsFixed(2)),
                 style: const TextStyle(color: Colors.grey),
               ),
             ),

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:chat_analyzer_ui/ui/common/time_to_text.dart';
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Deslizador para ajustar el umbral de conversación.
 class ThresholdSlider extends StatelessWidget {
@@ -17,16 +18,17 @@ class ThresholdSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Conversation Threshold',
+          appLocalizations.threshold_slider_title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 4),
         Text(
-          'Detected natural threshold: ${formatDuration(Duration(seconds: (naturalThreshold * 60).toInt()))}. Use the slider to adjust.',
+          appLocalizations.threshold_slider_description(formatDuration(Duration(seconds: (naturalThreshold * 60).toInt()))),
         ),
         Slider(
           value: currentThreshold,

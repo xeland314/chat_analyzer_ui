@@ -11,6 +11,7 @@ import 'dashboard/interactive_network_graph.dart';
 import 'response_time_chart.dart';
 import 'starters_enders_view.dart';
 import 'participant_stats_view.dart';
+import '../../l10n/app_localizations.dart';
 
 class DashboardView extends StatelessWidget {
   final ChatAnalysis analysis;
@@ -26,6 +27,7 @@ class DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final metrics = analysis.interactionAnalyzer.calculateInteractionMetrics();
     final replies = metrics.whoRepliesToWhom;
     final conversations = analysis.interactionAnalyzer.segmentConversations();
@@ -40,7 +42,7 @@ class DashboardView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Dashboard', style: Theme.of(context).textTheme.headlineSmall),
+        Text(appLocalizations.dashboard_view_title, style: Theme.of(context).textTheme.headlineSmall),
         const Divider(),
         InteractiveNetworkGraph(replies: replies),
         ...analysis.participants.map(

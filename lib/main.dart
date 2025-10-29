@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'ui/pages/home_page.dart';
 import 'ui/common/log.dart';
+import 'l10n/app_localizations.dart';
 
 void main() {
   runApp(const ChatAnalyzerApp());
@@ -15,11 +17,21 @@ class ChatAnalyzerApp extends StatefulWidget {
 
   @override
   State<ChatAnalyzerApp> createState() => _ChatAnalyzerAppState();
+
+  static _ChatAnalyzerAppState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_ChatAnalyzerAppState>();
 }
 
 class _ChatAnalyzerAppState extends State<ChatAnalyzerApp> {
   late StreamSubscription _intentSub;
   String? _sharedText;
+  Locale? _locale;
+
+  void setLocale(Locale value) {
+    setState(() {
+      _locale = value;
+    });
+  }
 
   Future<File> _persistSharedFile(File tempFile) async {
     final appDir = await getApplicationDocumentsDirectory();
@@ -81,6 +93,14 @@ class _ChatAnalyzerAppState extends State<ChatAnalyzerApp> {
     super.initState();
     Log.add('🚀 App initState');
 
+    _locale =
+        WidgetsBinding.instance.window.locale; // Initialize with system locale
+
+    if (defaultTargetPlatform != TargetPlatform.android &&
+        defaultTargetPlatform != TargetPlatform.iOS) {
+      return;
+    }
+
     _intentSub = ReceiveSharingIntent.instance.getMediaStream().listen(
       (files) async {
         Log.add(
@@ -127,6 +147,9 @@ class _ChatAnalyzerAppState extends State<ChatAnalyzerApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Chat Analyzer',
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: _locale, // Use the _locale variable
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.teal,

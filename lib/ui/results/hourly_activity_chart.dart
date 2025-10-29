@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Gráfico de barras para la actividad por hora del día.
 class HourlyActivityChart extends StatelessWidget {
@@ -9,6 +10,7 @@ class HourlyActivityChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     if (data.isEmpty) return const SizedBox.shrink();
 
     final entries = List.generate(24, (hour) {
@@ -29,7 +31,7 @@ class HourlyActivityChart extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Most Active Hours',
+          appLocalizations.hourly_activity_chart_title,
           style: Theme.of(context).textTheme.titleLarge,
           overflow: TextOverflow.ellipsis,
         ),
@@ -57,7 +59,7 @@ class HourlyActivityChart extends StatelessWidget {
                       if (hour % 3 == 0) {
                         return Padding(
                           padding: const EdgeInsets.only(top: 8.0),
-                          child: Text('${hour}h'),
+                          child: Text(appLocalizations.hourly_activity_chart_hour(hour.toString())),
                         );
                       }
                       return const Text('');
@@ -72,7 +74,7 @@ class HourlyActivityChart extends StatelessWidget {
                 touchTooltipData: BarTouchTooltipData(
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     return BarTooltipItem(
-                      '${rod.toY.round()} messages',
+                      appLocalizations.hourly_activity_chart_messages_tooltip(rod.toY.round().toString()),
                       const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../l10n/app_localizations.dart';
 
 class ChatDateSelector extends StatelessWidget {
   final List<DateTime> dates;
@@ -15,7 +16,8 @@ class ChatDateSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (dates.isEmpty) return const Text('Full Chat');
+    final appLocalizations = AppLocalizations.of(context)!;
+    if (dates.isEmpty) return Text(appLocalizations.chat_date_selector_full_chat);
 
     return DropdownButton<DateTime>(
       value: selected,

@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 class DisclaimerModal extends StatelessWidget {
   const DisclaimerModal({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            'Esta app analiza solo chats que exportas manualmente de WhatsApp.',
+          Text(
+            appLocalizations.disclaimer_modal_text,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
+            style: const TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
           ),
           const SizedBox(height: 8),
           InkWell(
@@ -22,20 +25,15 @@ class DisclaimerModal extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: const Text('Aviso de Privacidad'),
-                    content: const SingleChildScrollView(
+                    title: Text(appLocalizations.disclaimer_modal_privacy_notice_title),
+                    content: SingleChildScrollView(
                       child: Text(
-                        'Esta aplicación procesa únicamente chats que tú '
-                        'exportas manualmente desde WhatsApp. No accede a tu '
-                        'cuenta ni recopila información automáticamente. '
-                        'Todos los datos se analizan localmente en tu dispositivo '
-                        'y se anonimiza la información sensible para proteger '
-                        'la privacidad de terceros.',
+                        appLocalizations.disclaimer_modal_privacy_notice_content,
                       ),
                     ),
                     actions: <Widget>[
                       TextButton(
-                        child: const Text('Cerrar'),
+                        child: Text(appLocalizations.disclaimer_modal_privacy_notice_close_button),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -46,7 +44,7 @@ class DisclaimerModal extends StatelessWidget {
               );
             },
             child: Text(
-              'Toca aquí para ver el aviso completo',
+              appLocalizations.disclaimer_modal_privacy_notice_touch_to_view,
               style: TextStyle(
                 fontSize: 14,
                 color: Theme.of(context).colorScheme.primary,

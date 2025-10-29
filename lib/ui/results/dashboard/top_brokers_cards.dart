@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../src/analysis/betweenness_centrality.dart';
 import '../../chat/chat_avatar.dart';
+import '../../../l10n/app_localizations.dart';
 
 class TopBrokersCards extends StatelessWidget {
   final Map<String, Map<String, int>> replies;
@@ -17,6 +18,7 @@ class TopBrokersCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final brokerScores = _calculateBrokerScores();
 
     // 1. Verificar si todos los puntajes son cero
@@ -34,32 +36,30 @@ class TopBrokersCards extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Top Brokers', style: Theme.of(context).textTheme.titleLarge),
+        Text(appLocalizations.top_brokers_cards_title, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 16),
         if (hasBrokers) ...[
           // Muestra las tarjetas de los Top Brokers
-          ...topBrokers.map((broker) => _buildBrokerCard(context, broker)),
+          ...topBrokers.map((broker) => _buildBrokerCard(context, broker, appLocalizations)),
         ] else
           // Muestra el mensaje si no hay brokers (todos los puntajes son ~0)
-          _buildNoBrokersMessage(context),
+          _buildNoBrokersMessage(context, appLocalizations),
       ],
     );
   }
 
-  Widget _buildNoBrokersMessage(BuildContext context) {
+  Widget _buildNoBrokersMessage(BuildContext context, AppLocalizations appLocalizations) {
     return Card(
       color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-      child: const Padding(
-        padding: EdgeInsets.all(16.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            Icon(Icons.info_outline, color: Colors.grey, size: 30),
-            SizedBox(width: 16),
+            const Icon(Icons.info_outline, color: Colors.grey, size: 30),
+            const SizedBox(width: 16),
             Expanded(
               child: Text(
-                'No se encontraron brokers significativos en esta conversación. '
-                'Esto sugiere que la comunicación es lineal (A -> B -> C) o '
-                'dispersa, sin un único "puente" crucial que conecte a otros pares de usuarios.',
+                appLocalizations.top_brokers_cards_no_brokers_message,
               ),
             ),
           ],
@@ -71,6 +71,7 @@ class TopBrokersCards extends StatelessWidget {
   Widget _buildBrokerCard(
     BuildContext context,
     MapEntry<String, double> broker,
+    AppLocalizations appLocalizations,
   ) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -89,11 +90,11 @@ class TopBrokersCards extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
-                  Text('Broker Score: ${broker.value.toStringAsFixed(3)}'),
+                  Text(appLocalizations.top_brokers_cards_broker_score(broker.value.toStringAsFixed(3))),
                   const SizedBox(height: 4),
-                  const Text(
-                    'Este usuario actúa como un puente clave entre otros participantes.',
-                    style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+                  Text(
+                    appLocalizations.top_brokers_cards_broker_description,
+                    style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
                   ),
                 ],
               ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_force_directed_graph/flutter_force_directed_graph.dart';
 import '../../chat/chat_avatar.dart';
 import '../../../src/analysis/pagerank.dart';
+import '../../../l10n/app_localizations.dart';
 
 class InteractiveNetworkGraph extends StatefulWidget {
   final Map<String, Map<String, int>> replies;
@@ -83,11 +84,12 @@ class _InteractiveNetworkGraphState extends State<InteractiveNetworkGraph> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Communication Network',
+          appLocalizations.interactive_network_graph_title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 16),

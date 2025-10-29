@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Mapa de calor para la actividad de mensajes por día.
 class ActivityHeatmap extends StatelessWidget {
@@ -10,21 +11,22 @@ class ActivityHeatmap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final scrollController = ScrollController();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Message Activity ($year)',
+          appLocalizations.activity_heatmap_message_activity(year.toString()),
           style: Theme.of(context).textTheme.titleLarge,
           overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 8),
         if (data.isEmpty)
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('No message activity for this year.'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(appLocalizations.activity_heatmap_no_message_activity),
           )
         else
           SizedBox(
@@ -46,10 +48,10 @@ class ActivityHeatmap extends StatelessWidget {
                     final count = data[date] ?? 0;
                     final snackBar = SnackBar(
                       content: Text(
-                        '$count messages on ${date.toString().split(' ').first}.',
+                        appLocalizations.activity_heatmap_messages_on_date(count.toString(), date.toString().split(' ').first),
                       ),
                       action: SnackBarAction(
-                        label: 'Close',
+                        label: appLocalizations.activity_heatmap_close_button,
                         onPressed: () {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         },

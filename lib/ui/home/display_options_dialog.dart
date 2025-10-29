@@ -1,5 +1,6 @@
-
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
+import '../../main.dart';
 
 class DisplayOptionsDialog extends StatefulWidget {
   final double initialDisplayCount;
@@ -23,12 +24,19 @@ class _DisplayOptionsDialogState extends State<DisplayOptionsDialog> {
   late double _displayCount;
   late Set<String> _ignoredWords;
   final _textController = TextEditingController();
+  late Locale _selectedLocale;
 
   @override
   void initState() {
     super.initState();
     _displayCount = widget.initialDisplayCount;
     _ignoredWords = Set.from(widget.initialIgnoredWords);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _selectedLocale = Localizations.localeOf(context);
   }
 
   void _addIgnoredWord() {
@@ -49,14 +57,19 @@ class _DisplayOptionsDialogState extends State<DisplayOptionsDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return AlertDialog(
-      title: const Text('Display Options'),
+      title: Text(appLocalizations.display_options_dialog_title),
       content: SizedBox(
         width: double.maxFinite,
         child: ListView(
           shrinkWrap: true,
           children: [
-            const Text('Number of words to display'),
+            Text(
+              appLocalizations
+                  .display_options_dialog_number_of_words_to_display,
+            ),
             Slider(
               value: _displayCount,
               min: 1,
@@ -70,11 +83,12 @@ class _DisplayOptionsDialogState extends State<DisplayOptionsDialog> {
               },
             ),
             const SizedBox(height: 20),
-            const Text('Ignored Words'),
+            Text(appLocalizations.display_options_dialog_ignored_words),
             TextField(
               controller: _textController,
               decoration: InputDecoration(
-                labelText: 'Add a word to ignore',
+                labelText: appLocalizations
+                    .display_options_dialog_add_a_word_to_ignore,
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: _addIgnoredWord,
@@ -86,11 +100,38 @@ class _DisplayOptionsDialogState extends State<DisplayOptionsDialog> {
             Wrap(
               spacing: 8.0,
               children: _ignoredWords
-                  .map((word) => Chip(
-                        label: Text(word),
-                        onDeleted: () => _removeIgnoredWord(word),
-                      ))
+                  .map(
+                    (word) => Chip(
+                      label: Text(word),
+                      onDeleted: () => _removeIgnoredWord(word),
+                    ),
+                  )
                   .toList(),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              appLocalizations.display_options_dialog_language_selector_title,
+            ),
+            DropdownButton<Locale>(
+              value: _selectedLocale,
+              onChanged: (Locale? newLocale) {
+                if (newLocale != null) {
+                  setState(() {
+                    _selectedLocale = newLocale;
+                  });
+                  ChatAnalyzerApp.of(context)!.setLocale(newLocale);
+                }
+              },
+              items: AppLocalizations.supportedLocales.map((Locale locale) {
+                return DropdownMenuItem<Locale>(
+                  value: locale,
+                  child: Text(
+                    locale.languageCode == 'en'
+                        ? appLocalizations.language_english
+                        : appLocalizations.language_spanish,
+                  ),
+                );
+              }).toList(),
             ),
           ],
         ),
@@ -100,7 +141,7 @@ class _DisplayOptionsDialogState extends State<DisplayOptionsDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text(appLocalizations.display_options_dialog_cancel_button),
         ),
         TextButton(
           onPressed: () {
@@ -108,7 +149,7 @@ class _DisplayOptionsDialogState extends State<DisplayOptionsDialog> {
             widget.onIgnoredWordsChanged(_ignoredWords);
             Navigator.of(context).pop();
           },
-          child: const Text('Save'),
+          child: Text(appLocalizations.display_options_dialog_save_button),
         ),
       ],
     );

@@ -3,6 +3,7 @@ import '../../src/models/chat_analysis.dart';
 import 'dashboard_view.dart';
 import 'advanced_analysis_view.dart';
 import '../exports/export_button.dart';
+import '../../l10n/app_localizations.dart';
 
 class AdvancedAnalysisPage extends StatelessWidget {
   final ChatAnalysis analysis;
@@ -11,8 +12,9 @@ class AdvancedAnalysisPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Advanced Analysis')),
+      appBar: AppBar(title: Text(appLocalizations.analysis_result_view_advanced_analysis_title)),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [AdvancedAnalysisView(analysis: analysis)],
@@ -36,6 +38,7 @@ class AnalysisResultView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return Scaffold(
       body: RepaintBoundary(
         key: _analysisViewKey,
@@ -59,7 +62,7 @@ class AnalysisResultView extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text('View Advanced Analysis'),
+                child: Text(appLocalizations.analysis_result_view_view_advanced_analysis_button),
               ),
             ],
           ),
@@ -67,7 +70,7 @@ class AnalysisResultView extends StatelessWidget {
       ),
       floatingActionButton: ExportButton(
         repaintBoundaryKey: _analysisViewKey,
-        fileName: 'chat_analysis_report',
+        fileName: appLocalizations.analysis_result_view_chat_analysis_report_filename,
       ),
     );
   }

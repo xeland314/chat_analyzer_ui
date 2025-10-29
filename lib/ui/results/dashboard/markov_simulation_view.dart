@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../chat/chat_avatar.dart';
 import '../../common/emoji_rich_text.dart';
+import '../../../l10n/app_localizations.dart';
 
 class MarkovSimulationView extends StatefulWidget {
   final Map<String, Map<String, double>> transitionMatrix;
@@ -67,6 +68,7 @@ class _MarkovSimulationViewState extends State<MarkovSimulationView> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return Card(
       elevation: 3,
       margin: const EdgeInsets.symmetric(vertical: 12.0),
@@ -82,7 +84,7 @@ class _MarkovSimulationViewState extends State<MarkovSimulationView> {
                 TextButton(
                   onPressed: _runSimulation,
                   child: emojiRichText(
-                    "🔮 Simular conversación",
+                    appLocalizations.markov_simulation_view_button,
                     baseStyle: Theme.of(context).textTheme.titleMedium
                         ?.copyWith(fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
@@ -96,7 +98,7 @@ class _MarkovSimulationViewState extends State<MarkovSimulationView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Longitud: $_simulationLength mensajes",
+                  appLocalizations.markov_simulation_view_length(_simulationLength.toString()),
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Slider(
@@ -143,9 +145,9 @@ class _MarkovSimulationViewState extends State<MarkovSimulationView> {
                     .toList(),
               )
             else
-              const Text(
-                "Aún no hay simulación generada",
-                style: TextStyle(color: Colors.grey),
+              Text(
+                appLocalizations.markov_simulation_view_no_simulation,
+                style: const TextStyle(color: Colors.grey),
               ),
           ],
         ),

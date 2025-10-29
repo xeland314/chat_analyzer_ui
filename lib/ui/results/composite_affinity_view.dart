@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../src/analysis/matrix_operations.dart';
 import '../common/emoji_rich_text.dart';
+import '../../l10n/app_localizations.dart';
 
 class CompositeAffinityView extends StatelessWidget {
   final Map<String, Map<String, int>> replies;
@@ -10,6 +11,7 @@ class CompositeAffinityView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     // You can adjust alpha based on how much you want to weight direct vs indirect influence
     const double alpha = 0.7; 
     final compositeAffinity = calculateCompositeAffinity(replies, matrixSquared, alpha);
@@ -20,7 +22,7 @@ class CompositeAffinityView extends StatelessWidget {
       children: [
         const SizedBox(height: 24),
         Text(
-          'Composite Affinity (Direct + Indirect)',
+          appLocalizations.composite_affinity_view_title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
@@ -28,7 +30,7 @@ class CompositeAffinityView extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: DataTable(
             columns: [
-              const DataColumn(label: Text('From \\ To')),
+              DataColumn(label: Text(appLocalizations.composite_affinity_view_from_to)),
               ...participants.map(
                 (p) => DataColumn(
                   label: emojiRichText(

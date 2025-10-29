@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 class InfoWidgetWrapper extends StatelessWidget {
   final Widget child;
@@ -13,6 +14,7 @@ class InfoWidgetWrapper extends StatelessWidget {
   });
 
   void _showInfoDialog(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -21,7 +23,7 @@ class InfoWidgetWrapper extends StatelessWidget {
           content: SingleChildScrollView(child: Text(infoContent)),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cerrar'),
+              child: Text(appLocalizations.credits_modal_close_button),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -34,6 +36,7 @@ class InfoWidgetWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -43,9 +46,9 @@ class InfoWidgetWrapper extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: TextButton.icon(
             icon: const Icon(Icons.info_outline, size: 18),
-            label: const Text(
-              'Ver Información',
-              style: TextStyle(fontSize: 12),
+            label: Text(
+              appLocalizations.info_wrapper_info_button,
+              style: const TextStyle(fontSize: 12),
             ),
             onPressed: () => _showInfoDialog(context),
           ),

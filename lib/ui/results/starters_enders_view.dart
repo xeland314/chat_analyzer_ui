@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../chat/chat_avatar.dart';
+import '../../l10n/app_localizations.dart';
 
 class StartersEndersView extends StatelessWidget {
   final Map<String, int> starters;
@@ -13,6 +14,7 @@ class StartersEndersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final sortedStarters = starters.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     final sortedEnders = enders.entries.toList()
@@ -26,13 +28,13 @@ class StartersEndersView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Conversation Starters & Enders',
+          appLocalizations.starters_enders_view_title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 16),
-        _buildChart(context, 'Starters', sortedStarters, Colors.teal),
+        _buildChart(context, appLocalizations.starters_enders_view_starters_title, sortedStarters, Colors.teal),
         const SizedBox(height: 16),
-        _buildChart(context, 'Enders', sortedEnders, Colors.teal),
+        _buildChart(context, appLocalizations.starters_enders_view_enders_title, sortedEnders, Colors.teal),
       ],
     );
   }

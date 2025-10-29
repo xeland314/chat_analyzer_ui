@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
 import '../common/emoji_rich_text.dart';
+import '../../l10n/app_localizations.dart';
 
 class LoadingView extends StatefulWidget {
   const LoadingView({super.key});
@@ -12,15 +13,7 @@ class LoadingView extends StatefulWidget {
 
 class _LoadingViewState extends State<LoadingView> {
   // Lista de frases divertidas
-  final List<String> _phrases = [
-    'Analizando chats...',
-    'Vi algo que no debí ver...',
-    'Gatito trabajando, no molestar...',
-    'Calculando los chismes... esto tomará un momento.',
-    'Contando emojis... 😼',
-    'Conspirando para dominar el mundo... o solo el chat.',
-    'Limpiando las patitas... ya casi termino.',
-  ];
+  late List<String> _phrases;
 
   late String _currentPhrase;
   Timer? _timer;
@@ -28,6 +21,32 @@ class _LoadingViewState extends State<LoadingView> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final appLocalizations = AppLocalizations.of(context)!;
+
+    // Inicializa la lista con todas las frases traducidas
+    _phrases = [
+      appLocalizations.cat_phrase_1,
+      appLocalizations.cat_phrase_2,
+      appLocalizations.cat_phrase_3,
+      appLocalizations.cat_phrase_4,
+      appLocalizations.cat_phrase_5,
+      appLocalizations.cat_phrase_6,
+      appLocalizations.cat_phrase_7,
+      appLocalizations.cat_phrase_8,
+      appLocalizations.cat_phrase_9,
+      appLocalizations.cat_phrase_10,
+    ];
+
+    if (!mounted) {
+      _currentPhrase = _phrases[Random().nextInt(_phrases.length)];
+    }
+
     // Inicia con una frase aleatoria
     _currentPhrase = _phrases[Random().nextInt(_phrases.length)];
     // Inicia un temporizador para cambiar la frase cada 3 segundos
@@ -55,7 +74,7 @@ class _LoadingViewState extends State<LoadingView> {
           Image.asset(
             'assets/pixel-cat.png',
             height: 120,
-            semanticLabel: 'Gato pixelado trabajando',
+            semanticLabel: AppLocalizations.of(context)!.loading_view_pixel_cat_semantic_label,
           ),
           const SizedBox(height: 20),
           Padding(

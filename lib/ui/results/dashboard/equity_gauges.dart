@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../src/analysis/matrix_operations.dart';
+import '../../../l10n/app_localizations.dart';
 
 class EquityGauges extends StatelessWidget {
   final Map<String, Map<String, int>> replies;
@@ -8,6 +9,7 @@ class EquityGauges extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final participants = replies.keys.toList()..sort();
     if (participants.isEmpty) return const SizedBox.shrink();
 
@@ -39,16 +41,16 @@ class EquityGauges extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Participation Equity',
+          appLocalizations.equity_gauges_title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
-        _buildGauge('Speaking Equity', giniOutDegree),
+        _buildGauge(appLocalizations.equity_gauges_speaking_equity, giniOutDegree),
         const SizedBox(height: 8),
-        _buildGauge('Listening Equity', giniInDegree),
+        _buildGauge(appLocalizations.equity_gauges_listening_equity, giniInDegree),
         const SizedBox(height: 4),
         Text(
-          '(0 = perfect equality, 1 = perfect inequality)',
+          appLocalizations.equity_gauges_description,
           style: Theme.of(context).textTheme.bodySmall,
         ),
       ],

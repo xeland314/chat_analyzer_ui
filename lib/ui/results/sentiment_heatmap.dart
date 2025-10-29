@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'chart_legend_item.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Mapa de calor para la tendencia de sentimiento por día.
 class SentimentHeatmap extends StatelessWidget {
@@ -14,19 +15,20 @@ class SentimentHeatmap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     if (data.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Sentiment Trend ($year)',
+            appLocalizations.sentiment_heatmap_title(year.toString()),
             style: Theme.of(context).textTheme.titleLarge,
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 8),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('No sentiment data for this year.'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(appLocalizations.sentiment_heatmap_no_data),
           ),
         ],
       );
@@ -50,7 +52,7 @@ class SentimentHeatmap extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Sentiment Trend ($year)',
+          appLocalizations.sentiment_heatmap_title(year.toString()),
           style: Theme.of(context).textTheme.titleLarge,
           overflow: TextOverflow.ellipsis,
         ),
@@ -79,17 +81,17 @@ class SentimentHeatmap extends StatelessWidget {
                   final score = data[date] ?? 0.0;
                   final category = sentimentCategoryPerDay[date] ?? 0;
                   String sentimentText = category > 0
-                      ? 'Positive'
+                      ? appLocalizations.sentiment_heatmap_positive
                       : category < 0
-                      ? 'Negative'
-                      : 'Neutral';
+                      ? appLocalizations.sentiment_heatmap_negative
+                      : appLocalizations.sentiment_heatmap_neutral;
 
                   final snackBar = SnackBar(
                     content: Text(
-                      '$sentimentText sentiment (${score.toStringAsFixed(2)}) on ${date.toString().split(' ').first}.',
+                      appLocalizations.sentiment_heatmap_snackbar_content(sentimentText, score.toStringAsFixed(2), date.toString().split(' ').first),
                     ),
                     action: SnackBarAction(
-                      label: 'Close',
+                      label: appLocalizations.sentiment_heatmap_close_button,
                       onPressed: () {
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       },
@@ -105,9 +107,9 @@ class SentimentHeatmap extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Expanded(child: ChartLegendItem(Colors.green, 'Positive')),
-            Expanded(child: ChartLegendItem(Colors.red, 'Negative')),
-            Expanded(child: ChartLegendItem(Colors.grey.shade400, 'Neutral')),
+            Expanded(child: ChartLegendItem(Colors.green, appLocalizations.sentiment_heatmap_positive)),
+            Expanded(child: ChartLegendItem(Colors.red, appLocalizations.sentiment_heatmap_negative)),
+            Expanded(child: ChartLegendItem(Colors.grey.shade400, appLocalizations.sentiment_heatmap_neutral)),
           ],
         ),
       ],

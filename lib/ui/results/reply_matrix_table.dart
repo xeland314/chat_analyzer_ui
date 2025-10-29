@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../chat/chat_avatar.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Tabla que muestra quién le responde a quién.
 class ReplyMatrixTable extends StatefulWidget {
@@ -23,6 +24,7 @@ class _ReplyMatrixTableState extends State<ReplyMatrixTable> {
 
   // Método para copiar la matriz completa de datos al portapapeles
   void _copyMatrixToClipboard() {
+    final appLocalizations = AppLocalizations.of(context)!;
     final participants = widget.replies.keys.toList()..sort();
     final buffer = StringBuffer();
     final outDegree = <String, int>{};
@@ -46,10 +48,10 @@ class _ReplyMatrixTableState extends State<ReplyMatrixTable> {
     }
 
     // --- 2. Construir el Encabezado de la Matriz ---
-    buffer.write('Replier \\ To\t');
+    buffer.write('${appLocalizations.reply_matrix_table_replier_to}\t');
     buffer.write(participants.join('\t'));
-    buffer.write('\tOut-degree (Replies Sent)\t');
-    buffer.writeln('Balance (Out - In)');
+    buffer.write('\t${appLocalizations.reply_matrix_table_out_degree}\t');
+    buffer.writeln(appLocalizations.reply_matrix_table_balance);
 
     // --- 3. Construir las Filas de Datos (Replier data) ---
     for (final replier in participants) {
@@ -67,7 +69,7 @@ class _ReplyMatrixTableState extends State<ReplyMatrixTable> {
     }
 
     // --- 4. Construir la Fila Final (In-degree) ---
-    buffer.write('In-degree (Replies Received)\t');
+    buffer.write('${appLocalizations.reply_matrix_table_in_degree}\t');
     for (final p in participants) {
       buffer.write('${inDegree[p]}\t');
     }
@@ -77,17 +79,18 @@ class _ReplyMatrixTableState extends State<ReplyMatrixTable> {
     Clipboard.setData(ClipboardData(text: buffer.toString()));
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Text(
-          'Tabla de respuestas copiada al portapapeles (formato TSV)',
+          appLocalizations.reply_matrix_table_copied_snackbar,
         ),
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final participants = widget.replies.keys.toList()..sort();
     if (participants.isEmpty) return const SizedBox.shrink();
 
@@ -116,7 +119,7 @@ class _ReplyMatrixTableState extends State<ReplyMatrixTable> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Who Replies to Whom',
+          appLocalizations.reply_matrix_table_title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
@@ -129,10 +132,10 @@ class _ReplyMatrixTableState extends State<ReplyMatrixTable> {
             scrollDirection: Axis.horizontal,
             child: DataTable(
               columns: [
-                const DataColumn(label: Text('Replier \\ To')),
+                DataColumn(label: Text(appLocalizations.reply_matrix_table_replier_to)),
                 ...participants.map((p) => DataColumn(label: authorAvatar(p))),
-                const DataColumn(label: Text('Out-degree (Replies Sent)')),
-                const DataColumn(label: Text('Balance (Out - In)')),
+                DataColumn(label: Text(appLocalizations.reply_matrix_table_out_degree)),
+                DataColumn(label: Text(appLocalizations.reply_matrix_table_balance)),
               ],
               rows: [
                 ...participants.map((replier) {
@@ -150,7 +153,7 @@ class _ReplyMatrixTableState extends State<ReplyMatrixTable> {
                 }),
                 DataRow(
                   cells: [
-                    const DataCell(Text('In-degree (Replies Received)')),
+                    DataCell(Text(appLocalizations.reply_matrix_table_in_degree)),
                     ...participants.map((p) {
                       return DataCell(Text(inDegree[p].toString()));
                     }),
@@ -169,7 +172,7 @@ class _ReplyMatrixTableState extends State<ReplyMatrixTable> {
           child: ElevatedButton.icon(
             onPressed: _copyMatrixToClipboard,
             icon: const Icon(Icons.copy),
-            label: const Text('Copiar Tabla de Respuestas'),
+            label: Text(appLocalizations.reply_matrix_table_copy_button),
           ),
         ),
         const SizedBox(height: 8),

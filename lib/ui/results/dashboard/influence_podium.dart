@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../src/analysis/pagerank.dart';
 import '../../chat/chat_avatar.dart';
+import '../../../l10n/app_localizations.dart';
 
 class InfluencePodium extends StatelessWidget {
   final Map<String, Map<String, int>> replies;
@@ -9,6 +10,7 @@ class InfluencePodium extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final pageRanks = calculateWeightedPageRank(replies);
     final sortedRanks = pageRanks.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
@@ -18,7 +20,7 @@ class InfluencePodium extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Influence Podium', style: Theme.of(context).textTheme.titleLarge),
+        Text(appLocalizations.influence_podium_title, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

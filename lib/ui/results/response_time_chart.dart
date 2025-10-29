@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../common/time_to_text.dart';
 import '../chat/chat_avatar.dart';
+import '../../l10n/app_localizations.dart';
 
 class ResponseTimeChart extends StatelessWidget {
   final Map<String, Duration> responseTimes;
@@ -9,6 +10,7 @@ class ResponseTimeChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     if (responseTimes.isEmpty) return const SizedBox.shrink();
 
     final entries = responseTimes.entries.toList()
@@ -22,7 +24,7 @@ class ResponseTimeChart extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Average Response Time',
+          appLocalizations.response_time_chart_title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 16),

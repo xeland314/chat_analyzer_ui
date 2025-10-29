@@ -3,6 +3,7 @@ import '../common/info_wrapper.dart';
 import '../../src/models/chat_analysis.dart';
 import 'markov_chain_view.dart';
 import 'reply_matrix_table.dart';
+import '../../l10n/app_localizations.dart';
 
 class AdvancedAnalysisView extends StatelessWidget {
   final ChatAnalysis analysis;
@@ -11,6 +12,7 @@ class AdvancedAnalysisView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final metrics = analysis.interactionAnalyzer.calculateInteractionMetrics();
     final replies = metrics.whoRepliesToWhom;
 
@@ -22,22 +24,22 @@ class AdvancedAnalysisView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Advanced Interaction Analysis',
+              appLocalizations.advanced_analysis_view_title,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const Divider(),
             const SizedBox(height: 24),
             InfoWidgetWrapper(
-              title: 'Reply Matrix',
+              title: appLocalizations.advanced_analysis_view_reply_matrix_title,
               infoContent:
-                  'This table shows the number of replies each participant received from others.',
+                  appLocalizations.advanced_analysis_view_reply_matrix_info,
               child: ReplyMatrixTable(replies: replies),
             ),
             const SizedBox(height: 24),
             InfoWidgetWrapper(
-              title: 'Markov Chain',
+              title: appLocalizations.advanced_analysis_view_markov_chain_title,
               infoContent:
-                  'This table shows the probability of a participant replying to another participant.',
+                  appLocalizations.advanced_analysis_view_markov_chain_info,
               child: MarkovChainView(replies: replies),
             ),
           ],

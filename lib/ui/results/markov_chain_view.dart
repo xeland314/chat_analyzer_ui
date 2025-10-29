@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../src/analysis/matrix_operations.dart';
 import '../chat/chat_avatar.dart';
+import '../../l10n/app_localizations.dart';
 
 class MarkovChainView extends StatefulWidget {
   final Map<String, Map<String, int>> replies;
@@ -23,12 +24,13 @@ class _MarkovChainViewState extends State<MarkovChainView> {
   }
 
   void _copyMatrixToClipboard() {
+    final appLocalizations = AppLocalizations.of(context)!;
     final transitionMatrix = normalizeMatrix(widget.replies);
     final participants = transitionMatrix.keys.toList()..sort();
 
     final buffer = StringBuffer();
 
-    buffer.write('From \\ To\t');
+    buffer.write('${appLocalizations.markov_chain_view_from_to}\t');
     buffer.writeln(participants.join('\t'));
 
     // Escribir filas de datos
@@ -45,15 +47,16 @@ class _MarkovChainViewState extends State<MarkovChainView> {
     Clipboard.setData(ClipboardData(text: buffer.toString()));
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Matriz copiada al portapapeles (formato CSV/TSV)'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: Text(appLocalizations.markov_chain_view_matrix_copied_snackbar),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final transitionMatrix = normalizeMatrix(widget.replies);
     final participants = transitionMatrix.keys.toList()..sort();
 
@@ -62,7 +65,7 @@ class _MarkovChainViewState extends State<MarkovChainView> {
       children: [
         const SizedBox(height: 24),
         Text(
-          'Markov Chain - Transition Probabilities',
+          appLocalizations.markov_chain_view_title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
@@ -75,7 +78,7 @@ class _MarkovChainViewState extends State<MarkovChainView> {
             controller: _scrollController,
             child: DataTable(
               columns: [
-                const DataColumn(label: Text('From \\ To')),
+                DataColumn(label: Text(appLocalizations.markov_chain_view_from_to)),
                 ...participants.map((p) => DataColumn(label: authorAvatar(p))),
               ],
               rows: participants.map((p1) {
@@ -98,7 +101,7 @@ class _MarkovChainViewState extends State<MarkovChainView> {
           child: ElevatedButton.icon(
             onPressed: _copyMatrixToClipboard,
             icon: const Icon(Icons.copy),
-            label: const Text('Copiar Matriz de Transición'),
+            label: Text(appLocalizations.markov_chain_view_copy_matrix_button),
           ),
         ),
         const SizedBox(height: 8),

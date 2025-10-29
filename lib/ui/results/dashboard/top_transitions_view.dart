@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../common/emoji_rich_text.dart';
 import '../../chat/chat_avatar.dart';
+import '../../../l10n/app_localizations.dart';
 
 class TopTransitionsView extends StatefulWidget {
   final Map<String, Map<String, double>> transitionMatrix;
@@ -51,12 +52,13 @@ class _TopTransitionsViewState extends State<TopTransitionsView> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Título
         emojiRichText(
-          '¿Quién responde a quién?',
+          appLocalizations.top_transitions_view_title,
           baseStyle: Theme.of(context).textTheme.titleLarge,
           overflow: TextOverflow.ellipsis,
         ),
@@ -71,7 +73,7 @@ class _TopTransitionsViewState extends State<TopTransitionsView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Top $_topCount de $_maxTransitions transiciones',
+                  appLocalizations.top_transitions_view_description(_topCount.toString(), _maxTransitions.toString()),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Slider(
@@ -79,7 +81,7 @@ class _TopTransitionsViewState extends State<TopTransitionsView> {
                   min: 1,
                   max: _maxTransitions.toDouble(),
                   divisions: _maxTransitions - 1,
-                  label: '$_topCount',
+                  label: _topCount.toString(),
                   onChanged: (double value) {
                     setState(() {
                       _topCount = value.round();

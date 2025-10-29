@@ -9,6 +9,7 @@ import '../chat/chat_view_screen.dart';
 import '../home/analysis_view.dart';
 import '../common/log.dart';
 import '../home/display_options_dialog.dart';
+import '../../l10n/app_localizations.dart';
 
 // --- Helper ---
 Future<ChatAnalysis> _analyzeInIsolate(String content) async {
@@ -120,9 +121,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat Analyzer'),
+        title: Text(appLocalizations.name),
         backgroundColor: Colors.teal,
         titleTextStyle: const TextStyle(color: Colors.white, fontSize: 24),
         actions: [
@@ -130,20 +132,20 @@ class _HomePageState extends State<HomePage> {
             IconButton(
               icon: const Icon(Icons.chat),
               onPressed: _viewFullChat,
-              tooltip: 'View Full Chat',
+              tooltip: appLocalizations.home_action_tooltip,
               color: Colors.white,
             ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: _openDisplayOptions,
-            tooltip: 'Display Options',
+            tooltip: appLocalizations.home_action_display,
             color: Colors.white,
           ),
           if (_analysis != null)
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: _resetAnalysis,
-              tooltip: 'Reset Analysis',
+              tooltip: appLocalizations.home_action_reset,
               color: Colors.white,
             ),
           IconButton(
@@ -154,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                 builder: (_) => const LogViewerDialog(),
               );
             },
-            tooltip: 'View Logs',
+            tooltip: appLocalizations.home_action_logs,
             color: Colors.white,
           ),
         ],
