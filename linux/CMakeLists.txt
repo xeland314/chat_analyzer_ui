@@ -112,6 +112,25 @@ install(DIRECTORY "${NATIVE_ASSETS_DIR}"
    DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
    COMPONENT Runtime)
 
+# ============================================================================
+# LIBRERÍA RUST NATIVA
+# ============================================================================
+# Copiar la librería Rust compilada al bundle de Linux
+set(RUST_LIB_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/lib/libchat_rust.so")
+
+# Verificar si la librería existe antes de intentar instalarla
+if(EXISTS "${RUST_LIB_SOURCE}")
+    message(STATUS "✅ Found Rust library: ${RUST_LIB_SOURCE}")
+    install(FILES "${RUST_LIB_SOURCE}"
+            DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
+            COMPONENT Runtime)
+else()
+    message(WARNING "⚠️ Rust library not found at: ${RUST_LIB_SOURCE}")
+    message(WARNING "The app will fall back to the Dart parser")
+endif()
+# ============================================================================
+
+
 # Fully re-copy the assets directory on each build to avoid having stale files
 # from a previous install.
 set(FLUTTER_ASSET_DIR_NAME "flutter_assets")
