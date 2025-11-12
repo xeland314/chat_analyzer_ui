@@ -4,7 +4,7 @@ import 'package:chat_analyzer_ui/src/analysis/chat_parser.dart';
 import '../src/mock_message.dart';
 
 void main() {
-  final parser = ChatParserBatchOptimized();
+  final parser = ChatParserOptimized();
   final results = <Map<String, dynamic>>[];
 
   setUpAll(() {

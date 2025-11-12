@@ -126,7 +126,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "084fbfe1730138a55d52c83de5c4d406bc531b27"
+      resolved-ref: "45ff412d72486a220ca0e8fefe2dbf32d45ebcf8"
       url: "https://github.com/xeland314/dart_sentiment.git"
     source: git
     version: "0.0.9"

@@ -82,7 +82,7 @@ class ChatParserFFI {
   static ParseWhatsAppChatDart? _parseWhatsAppChat;
   static FreeStringDart? _freeString;
   static bool _ffiAvailable = false;
-  static ChatParserBatchOptimized? _dartParser; // Parser de respaldo
+  static ChatParserOptimized? _dartParser; // Parser de respaldo
 
   ChatParserFFI() {
     _loadLibrary();
@@ -125,7 +125,7 @@ class ChatParserFFI {
       // Si falla, usar el parser de Dart como fallback
       // print('⚠️ FFI not available: $e');
       // print('📱 Using Dart parser as fallback');
-      _dartParser = ChatParserBatchOptimized();
+      _dartParser = ChatParserOptimized();
       _ffiAvailable = false;
     }
   }
@@ -193,6 +193,6 @@ class ChatParserFFI {
 
   // Método útil para saber qué parser se está usando
   static bool get isUsingFFI => _ffiAvailable;
-  
+
   static String get parserType => _ffiAvailable ? 'Rust FFI' : 'Dart';
 }
