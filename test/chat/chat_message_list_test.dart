@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:chat_analyzer_ui/ui/chat/chat_message_list.dart';
 import 'package:chat_analyzer_ui/ui/chat/chat_message.dart';
 import 'package:chat_analyzer_ui/src/models/chat_message.dart';
+import 'package:chat_analyzer_ui/l10n/app_localizations.dart';
 
 void main() {
   group('ChatMessageList', () {
@@ -11,13 +13,27 @@ void main() {
     ) async {
       await tester.pumpWidget(
         const MaterialApp(
+          // 1. Proporcionar las delegadas de localización
+          localizationsDelegates: [
+            AppLocalizations.delegate, // Tu delegado
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          // 2. Definir los idiomas soportados (para que el delegado sepa qué cargar)
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: Locale('es'),
           home: Scaffold(
             body: ChatMessageList(messages: [], firstParticipantName: 'Alice'),
           ),
         ),
       );
-
-      expect(find.text('No messages on this date.'), findsOneWidget);
+      // 🚨 Paso clave: Obtener el contexto después de pumpWidget()
+      final context = tester.element(find.byType(ChatMessageList));
+      expect(
+        find.text(AppLocalizations.of(context)!.chat_message_list_no_messages),
+        findsOneWidget,
+      );
       expect(find.byType(ChatMessageWidget), findsNothing);
     });
 
@@ -41,6 +57,16 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          // 1. Proporcionar las delegadas de localización
+          localizationsDelegates: [
+            AppLocalizations.delegate, // Tu delegado
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          // 2. Definir los idiomas soportados (para que el delegado sepa qué cargar)
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: Locale('es'),
           home: Scaffold(
             body: ChatMessageList(
               messages: messages,

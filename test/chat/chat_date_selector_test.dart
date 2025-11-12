@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:chat_analyzer_ui/ui/chat/chat_date_selector.dart';
+import 'package:chat_analyzer_ui/l10n/app_localizations.dart';
 
 void main() {
   group('ChatDateSelector', () {
@@ -10,6 +12,16 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
+          // 1. Proporcionar las delegadas de localización
+          localizationsDelegates: const [
+            AppLocalizations.delegate, // Tu delegado
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          // 2. Definir los idiomas soportados (para que el delegado sepa qué cargar)
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('es'),
           home: Scaffold(
             body: ChatDateSelector(
               dates: [],
@@ -20,7 +32,12 @@ void main() {
         ),
       );
 
-      expect(find.text('Full Chat'), findsOneWidget);
+      // 🚨 Paso clave: Obtener el contexto después de pumpWidget()
+      final context = tester.element(find.byType(ChatDateSelector));
+      expect(
+        find.text(AppLocalizations.of(context)!.chat_date_selector_full_chat),
+        findsOneWidget,
+      );
       expect(find.byType(DropdownButton<DateTime>), findsNothing);
     });
 
@@ -33,6 +50,16 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          // 1. Proporcionar las delegadas de localización
+          localizationsDelegates: const [
+            AppLocalizations.delegate, // Tu delegado
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          // 2. Definir los idiomas soportados (para que el delegado sepa qué cargar)
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('es'),
           home: Scaffold(
             body: ChatDateSelector(
               dates: dates,
