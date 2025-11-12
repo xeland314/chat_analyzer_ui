@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:desktop_drop/desktop_drop.dart';
+import 'package:uuid/uuid.dart';
 import '../../src/analysis/analysis_service.dart';
 import '../../src/models/chat_analysis.dart';
 import '../chat/chat_view_screen.dart';
@@ -12,9 +13,11 @@ import '../home/display_options_dialog.dart';
 import '../../l10n/app_localizations.dart';
 
 // --- Helper ---
-Future<ChatAnalysis> _analyzeInIsolate(String content) async {
+Future<ChatAnalysis> _analyzeInIsolate(Map<String, String> args) async {
   final service = AnalysisService();
-  return await service.getAnalysis(content);
+  final content = args['content']!;
+  final id = args['id']!;
+  return await service.getAnalysis(content, id: id);
 }
 
 class HomePage extends StatefulWidget {
@@ -57,7 +60,8 @@ class _HomePageState extends State<HomePage> {
     });
 
     try {
-      final analysis = await compute(_analyzeInIsolate, content);
+      final id = const Uuid().v4();
+      final analysis = await compute(_analyzeInIsolate, {'content': content, 'id': id});
       if (!mounted) return;
       setState(() => _analysis = analysis);
       Log.add("Analysis completed successfully");
