@@ -178,23 +178,23 @@ class InteractionAnalyzer {
       final replier = currentMessage.author;
       final repliee = previousMessage.author;
 
+      final responseDuration = currentMessage.dateTime.difference(
+        previousMessage.dateTime,
+      );
 
-        final responseDuration = currentMessage.dateTime.difference(
-          previousMessage.dateTime,
-        );
+      // And it must be within the conversation threshold to be a valid reply.
+      if (responseDuration <= thresholdDuration) {
+        // Increment reply count.
+        final replierMap = whoRepliesToWhom.putIfAbsent(replier, () => {});
+        replierMap[repliee] = (replierMap[repliee] ?? 0) + 1;
 
-        // And it must be within the conversation threshold to be a valid reply.
-        if (responseDuration <= thresholdDuration) {
-          // Increment reply count.
-          final replierMap = whoRepliesToWhom.putIfAbsent(replier, () => {});
-          replierMap[repliee] = (replierMap[repliee] ?? 0) + 1;
-
-          // Add response time for averaging later.
-          if (replier != repliee) {
-            responseTimes.putIfAbsent(replier, () => []).add(responseDuration);
-          }
+        // Add response time for averaging later.
+        if (replier != repliee) {
+          responseTimes.putIfAbsent(replier, () => []).add(responseDuration);
         }
+      }
     }
+
     final averageResponseTime = <String, Duration>{};
     responseTimes.forEach((participant, durations) {
       if (durations.isNotEmpty) {

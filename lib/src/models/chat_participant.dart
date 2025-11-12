@@ -1,6 +1,4 @@
 import 'package:chat_analyzer_ui/src/analysis/emoji_regex.dart';
-import 'package:chat_analyzer_ui/src/analysis/stopwords_english.dart';
-import 'package:chat_analyzer_ui/src/analysis/stopwords_spanish.dart';
 import '../analysis/stopwords.dart';
 import 'chat_message.dart';
 
@@ -126,11 +124,17 @@ class ChatParticipant {
       // Simple tokenization
       final words = message.content.toLowerCase().split(RegExp(r'\s+'));
 
-      for (final word in words) {
-        if (!stopwords.contains(word) &&
-            !spanishStopWords.contains(word) &&
-            !englishStopWords.contains(word) &&
-            wordPattern.hasMatch(word)) {
+      for (String word in words) {
+        // 🚨 Corrección: Limpiar la puntuación de la palabra aquí
+        word = word.replaceAll(RegExp(r'[^\w\sáéíóúüñ]'), '').trim();
+        // La expresión regular '[^\w\sáéíóúüñ]' elimina cualquier cosa que no sea:
+        // una letra (a-z, A-Z, 0-9, _) o un espacio o una tilde/ñ.
+
+        if (word.isEmpty) {
+          continue;
+        }
+
+        if (!stopwords.contains(word) && wordPattern.hasMatch(word)) {
           frequency[word] = (frequency[word] ?? 0) + 1;
         }
       }

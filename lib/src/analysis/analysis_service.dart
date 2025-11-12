@@ -1,32 +1,24 @@
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
 import '../models/chat_analysis.dart';
-import 'chat_parser.dart';
+import 'chat_parser_rust.dart';
 
 class AnalysisService {
-  final _parser = ChatParser();
+  final _parser = ChatParserFFI();
   final _cache = <String, ChatAnalysis>{};
 
   /// Processes the chat content, using a cached result if available.
-  Future<ChatAnalysis> getAnalysis(String chatContent) async {
-    final hash = _generateHash(chatContent);
-
-    if (_cache.containsKey(hash)) {
+  Future<ChatAnalysis> getAnalysis(
+    String chatContent, {
+    required String id,
+  }) async {
+    if (_cache.containsKey(id)) {
       // Return the cached result
-      return _cache[hash]!;
+      return _cache[id]!;
     }
 
     // If not in cache, parse, store, and then return
     final analysis = _parser.parse(chatContent);
-    _cache[hash] = analysis;
+    _cache[id] = analysis;
     return analysis;
-  }
-
-  /// Generates a SHA-256 hash of the given content.
-  String _generateHash(String content) {
-    final bytes = utf8.encode(content); // Convert content to bytes
-    final digest = sha256.convert(bytes); // Generate the hash
-    return digest.toString();
   }
 
   /// Clears the analysis cache.

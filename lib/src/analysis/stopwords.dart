@@ -1,4 +1,7 @@
-const Set<String> stopwords = {
+import 'stopwords_english.dart';
+import 'stopwords_spanish.dart';
+
+Set<String> stopwords = {
   'a',
   'b',
   'c',
@@ -71,6 +74,11 @@ const Set<String> stopwords = {
   '°',
   '<',
   '>',
+  // Inserta todos los elementos de englishStopWords aquí
+  ...englishStopWords,
+
+  // Inserta todos los elementos de spanishStopWords aquí
+  ...spanishStopWords,
 };
 
 const Set<String> mediaOmittedWords = {
