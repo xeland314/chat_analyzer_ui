@@ -47,7 +47,7 @@ class ChatParserOptimized {
       if (currentAuthor != null &&
           currentDateTime != null &&
           messageBuffer.isNotEmpty) {
-        final messageContent = messageBuffer.toString();
+        final messageContent = messageBuffer.toString().trimRight();
 
         // OPTIMIZACIÓN 7: Análisis de sentimiento más eficiente
         // Considera cachear o hacer batch processing si es posible
