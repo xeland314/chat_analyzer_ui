@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Chat Analyzer UI
+Comment=Analyze chat conversations with AI-powered sentiment analysis
+Exec=chat_analyzer_ui
+Icon=io.xeland314.chat_analyzer_ui
+Categories=Office;Utility;
+Terminal=false
