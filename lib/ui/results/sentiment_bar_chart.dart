@@ -4,15 +4,16 @@ import '../../l10n/app_localizations.dart';
 
 class SentimentBarChart extends StatelessWidget {
   final Map<String, int> sentimentData;
+  final int multimediaCount;
 
-  const SentimentBarChart({super.key, required this.sentimentData});
+  const SentimentBarChart({super.key, required this.sentimentData, required this.multimediaCount});
 
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
     final positive = sentimentData['Positive']!;
     final negative = sentimentData['Negative']!;
-    final neutral = sentimentData['Neutral']!;
+    final neutral = sentimentData['Neutral']! - multimediaCount;
     final total = positive + negative + neutral;
 
     if (total == 0) return const SizedBox.shrink();

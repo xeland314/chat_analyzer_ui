@@ -53,7 +53,7 @@ class ParticipantStatsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SentimentBarChart(sentimentData: participant.sentimentAnalysis),
+                SentimentBarChart(sentimentData: participant.sentimentAnalysis, multimediaCount: participant.multimediaCount,),
                 const SizedBox(height: 16),
                 FrequencyListView(title: appLocalizations.participant_stats_view_most_common_words, data: topWords),
                 const SizedBox(height: 16),
