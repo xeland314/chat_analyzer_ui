@@ -128,11 +128,3 @@ JSON:
 
 5) Actualizar la guía
 - Mantén `docs/AI_USAGE_AND_PROMPTS.md` sincronizada cuando cambies el esquema de export.
-
----
-
-If you'd like, I can:
-- Add a small CLI snippet (or Dart script) to anonymize exports before sending to an LLM.
-- Add a short example `export_example.json` in `docs/` with real-like but anonymized data.
-
-Which add-on do you prefer (anonymizer script or example JSON)?
