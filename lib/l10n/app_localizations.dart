@@ -374,7 +374,7 @@ abstract class AppLocalizations {
   /// No description provided for @advanced_analysis_view_title.
   ///
   /// In en, this message translates to:
-  /// **'Advanced Interaction Analysis'**
+  /// **'Hidden Insights'**
   String get advanced_analysis_view_title;
 
   /// No description provided for @advanced_analysis_view_reply_matrix_title.
@@ -386,19 +386,19 @@ abstract class AppLocalizations {
   /// No description provided for @advanced_analysis_view_reply_matrix_info.
   ///
   /// In en, this message translates to:
-  /// **'This table shows the number of replies each participant received from others.'**
+  /// **'This table shows how many replies each participant received from others.'**
   String get advanced_analysis_view_reply_matrix_info;
 
   /// No description provided for @advanced_analysis_view_markov_chain_title.
   ///
   /// In en, this message translates to:
-  /// **'Markov Chain'**
+  /// **'Conversation Flow'**
   String get advanced_analysis_view_markov_chain_title;
 
   /// No description provided for @advanced_analysis_view_markov_chain_info.
   ///
   /// In en, this message translates to:
-  /// **'This table shows the probability of a participant replying to another participant.'**
+  /// **'How likely it is for one person to reply after another.'**
   String get advanced_analysis_view_markov_chain_info;
 
   /// No description provided for @analysis_result_view_advanced_analysis_title.
@@ -422,7 +422,7 @@ abstract class AppLocalizations {
   /// No description provided for @composite_affinity_view_title.
   ///
   /// In en, this message translates to:
-  /// **'Composite Affinity (Direct + Indirect)'**
+  /// **'Strong Connections'**
   String get composite_affinity_view_title;
 
   /// No description provided for @composite_affinity_view_from_to.
@@ -434,13 +434,13 @@ abstract class AppLocalizations {
   /// No description provided for @dashboard_view_title.
   ///
   /// In en, this message translates to:
-  /// **'Dashboard'**
+  /// **'Group Summary'**
   String get dashboard_view_title;
 
   /// No description provided for @emitter_similarity_view_title.
   ///
   /// In en, this message translates to:
-  /// **'Emitter Similarity (Similar Communication Profiles)'**
+  /// **'Similar Communication Styles'**
   String get emitter_similarity_view_title;
 
   /// No description provided for @emitter_similarity_view_participant_participant.
@@ -536,7 +536,7 @@ abstract class AppLocalizations {
   /// No description provided for @receiver_similarity_view_title.
   ///
   /// In en, this message translates to:
-  /// **'Receiver Similarity (Similar Roles)'**
+  /// **'Similar Communication Roles'**
   String get receiver_similarity_view_title;
 
   /// No description provided for @receiver_similarity_view_participant_participant.
@@ -560,13 +560,13 @@ abstract class AppLocalizations {
   /// No description provided for @reply_matrix_table_out_degree.
   ///
   /// In en, this message translates to:
-  /// **'Out-degree (Replies Sent)'**
+  /// **'Messages sent'**
   String get reply_matrix_table_out_degree;
 
   /// No description provided for @reply_matrix_table_balance.
   ///
   /// In en, this message translates to:
-  /// **'Balance (Out - In)'**
+  /// **'Balance (sent - received)'**
   String get reply_matrix_table_balance;
 
   /// No description provided for @reply_matrix_table_title.
@@ -578,7 +578,7 @@ abstract class AppLocalizations {
   /// No description provided for @reply_matrix_table_in_degree.
   ///
   /// In en, this message translates to:
-  /// **'In-degree (Replies Received)'**
+  /// **'Messages received'**
   String get reply_matrix_table_in_degree;
 
   /// No description provided for @reply_matrix_table_copy_button.
@@ -860,7 +860,7 @@ abstract class AppLocalizations {
   /// No description provided for @info_wrapper_info_button.
   ///
   /// In en, this message translates to:
-  /// **'Info'**
+  /// **'What does this mean?'**
   String get info_wrapper_info_button;
 
   /// No description provided for @export_button_label.

@@ -151,19 +151,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get activity_heatmap_close_button => 'Close';
 
   @override
-  String get advanced_analysis_view_title => 'Advanced Interaction Analysis';
+  String get advanced_analysis_view_title => 'Hidden Insights';
 
   @override
   String get advanced_analysis_view_reply_matrix_title => 'Reply Matrix';
 
   @override
-  String get advanced_analysis_view_reply_matrix_info => 'This table shows the number of replies each participant received from others.';
+  String get advanced_analysis_view_reply_matrix_info => 'This table shows how many replies each participant received from others.';
 
   @override
-  String get advanced_analysis_view_markov_chain_title => 'Markov Chain';
+  String get advanced_analysis_view_markov_chain_title => 'Conversation Flow';
 
   @override
-  String get advanced_analysis_view_markov_chain_info => 'This table shows the probability of a participant replying to another participant.';
+  String get advanced_analysis_view_markov_chain_info => 'How likely it is for one person to reply after another.';
 
   @override
   String get analysis_result_view_advanced_analysis_title => 'Advanced Analysis';
@@ -175,16 +175,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get analysis_result_view_chat_analysis_report_filename => 'chat_analysis_report';
 
   @override
-  String get composite_affinity_view_title => 'Composite Affinity (Direct + Indirect)';
+  String get composite_affinity_view_title => 'Strong Connections';
 
   @override
   String get composite_affinity_view_from_to => 'From \\ To';
 
   @override
-  String get dashboard_view_title => 'Dashboard';
+  String get dashboard_view_title => 'Group Summary';
 
   @override
-  String get emitter_similarity_view_title => 'Emitter Similarity (Similar Communication Profiles)';
+  String get emitter_similarity_view_title => 'Similar Communication Styles';
 
   @override
   String get emitter_similarity_view_participant_participant => 'Participant \\ Participant';
@@ -238,7 +238,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get participant_stats_view_most_common_emojis => 'Most Common Emojis';
 
   @override
-  String get receiver_similarity_view_title => 'Receiver Similarity (Similar Roles)';
+  String get receiver_similarity_view_title => 'Similar Communication Roles';
 
   @override
   String get receiver_similarity_view_participant_participant => 'Participant \\ Participant';
@@ -250,16 +250,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reply_matrix_table_replier_to => 'Replier \\ To';
 
   @override
-  String get reply_matrix_table_out_degree => 'Out-degree (Replies Sent)';
+  String get reply_matrix_table_out_degree => 'Messages sent';
 
   @override
-  String get reply_matrix_table_balance => 'Balance (Out - In)';
+  String get reply_matrix_table_balance => 'Balance (sent - received)';
 
   @override
   String get reply_matrix_table_title => 'Who Replies to Whom';
 
   @override
-  String get reply_matrix_table_in_degree => 'In-degree (Replies Received)';
+  String get reply_matrix_table_in_degree => 'Messages received';
 
   @override
   String get reply_matrix_table_copy_button => 'Copy Reply Table';
@@ -426,7 +426,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get log_empty => '(empty)';
 
   @override
-  String get info_wrapper_info_button => 'Info';
+  String get info_wrapper_info_button => 'What does this mean?';
 
   @override
   String get export_button_label => 'Export';
