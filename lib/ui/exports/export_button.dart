@@ -21,7 +21,16 @@ class ExportButton extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
 
     return FloatingActionButton(
-      onPressed: null,
+      onPressed: () async {
+        // Quick action: export as TOON by default if we have data
+        if (dataMap != null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.export_button_label + ' — ' + loc.export_toon)));
+          await ExportService.exportData(dataMap!, 'toon', fileName, context);
+          return;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.export_no_data_provided)));
+      },
       child: PopupMenuButton<String>(
         tooltip: loc.export_button_label,
         icon: const Icon(Icons.share),

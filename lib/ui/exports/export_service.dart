@@ -231,6 +231,19 @@ class ExportService {
     }
   }
 
+  /// Encode a data map to a TOON string. Returns the encoded TOON text.
+  /// Falls back to a minimal TOON wrapper around YAML if the encoder isn't available.
+  static Future<String> toToonString(Map<String, dynamic> data) async {
+    try {
+      // Use the toon encoder if available
+      return toon.encode(data);
+    } catch (e) {
+      // Fallback: wrap YAML body with a simple TOON header
+      final yamlBody = json2yaml(data);
+      return 'TOON v1\n---\n' + yamlBody;
+    }
+  }
+
   /// Export a square transition matrix (Map<from, Map<to, value>>) to TSV or CSV.
   /// Saves to Downloads on desktop or shares on mobile. Uses localization for messages.
   static Future<void> exportMatrix(
