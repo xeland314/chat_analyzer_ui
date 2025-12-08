@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../main.dart';
+import '../../src/settings/display_settings.dart';
 
 class DisplayOptionsDialog extends StatefulWidget {
   final double initialDisplayCount;
@@ -31,6 +32,23 @@ class _DisplayOptionsDialogState extends State<DisplayOptionsDialog> {
     super.initState();
     _displayCount = widget.initialDisplayCount;
     _ignoredWords = Set.from(widget.initialIgnoredWords);
+    _loadPersistentSettings();
+  }
+
+  bool _loadingSettings = false;
+
+  Future<void> _loadPersistentSettings() async {
+    if (!mounted) return;
+    setState(() {
+      _loadingSettings = true;
+    });
+    final settings = await DisplaySettings.load();
+    if (!mounted) return;
+    setState(() {
+      _displayCount = settings.displayCount;
+      _ignoredWords = Set.from(settings.ignoredWords);
+      _loadingSettings = false;
+    });
   }
 
   @override
@@ -66,10 +84,13 @@ class _DisplayOptionsDialogState extends State<DisplayOptionsDialog> {
         child: ListView(
           shrinkWrap: true,
           children: [
-            Text(
-              appLocalizations
-                  .display_options_dialog_number_of_words_to_display,
-            ),
+            if (_loadingSettings)
+              const Center(child: CircularProgressIndicator())
+            else ...[
+              Text(
+                appLocalizations
+                    .display_options_dialog_number_of_words_to_display,
+              ),
             Slider(
               value: _displayCount,
               min: 1,
@@ -82,6 +103,7 @@ class _DisplayOptionsDialogState extends State<DisplayOptionsDialog> {
                 });
               },
             ),
+            ],
             const SizedBox(height: 20),
             Text(appLocalizations.display_options_dialog_ignored_words),
             TextField(
@@ -144,7 +166,13 @@ class _DisplayOptionsDialogState extends State<DisplayOptionsDialog> {
           child: Text(appLocalizations.display_options_dialog_cancel_button),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
+            // Persist settings
+            final settings = await DisplaySettings.load();
+            await settings.setDisplayCount(_displayCount);
+            await settings.setIgnoredWords(_ignoredWords.toList());
+
+            if (!mounted) return;
             widget.onDisplayCountChanged(_displayCount);
             widget.onIgnoredWordsChanged(_ignoredWords);
             Navigator.of(context).pop();
