@@ -50,6 +50,9 @@ dependencies:
   share_plus: ^12.0.0
   uuid: ^4.5.1
   flutter_force_directed_graph: ^1.0.8
+  toon_format:
+    git:
+      url: https://github.com/toon-format/toon-dart.git
 
   # Internationalization support.
   flutter_localizations:
@@ -69,6 +72,8 @@ dev_dependencies:
   test: ^1.26.3
   ffigen: ^20.1.1
   flutter_launcher_icons: ^0.14.4
+  json2yaml: ^3.0.0
+  # toon_format is used as a dependency (see above)
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

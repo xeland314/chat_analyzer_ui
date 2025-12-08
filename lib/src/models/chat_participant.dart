@@ -172,4 +172,29 @@ class ChatParticipant {
       ..sort((a, b) => b.value.compareTo(a.value));
     return sortedEmojis.take(count).toList();
   }
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'messageCount': messageCount,
+        'multimediaCount': multimediaCount,
+        'messages': messages.map((m) => m.toMap()).toList(),
+        'wordFrequency': wordFrequency,
+        'emojiFrequency': emojiFrequency,
+        'sentimentAnalysis': sentimentAnalysis,
+        // Activity by hour: array of 24 integers, index = hour (0-23)
+        'messages_by_hour': List<int>.generate(24, (i) => messageCountByHour[i] ?? 0),
+        // Peak hour (0-23) where the participant sent the most messages
+        'peak_hour': (() {
+          if (messageCountByHour.isEmpty) return 0;
+          int maxHour = 0;
+          int maxCount = -1;
+          messageCountByHour.forEach((hour, cnt) {
+            if (cnt > maxCount) {
+              maxCount = cnt;
+              maxHour = hour;
+            }
+          });
+          return maxHour;
+        })(),
+      };
 }

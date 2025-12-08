@@ -19,4 +19,9 @@ class ChatAnalysis {
     allMessages.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     return allMessages;
   }
+  Map<String, dynamic> toMap() => {
+        'participants': participants.map((p) => p.toMap()).toList(),
+        'allMessagesChronological':
+            allMessagesChronological.map((m) => m.toMap()).toList(),
+      };
 }

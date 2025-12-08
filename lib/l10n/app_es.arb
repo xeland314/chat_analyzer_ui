@@ -69,6 +69,10 @@
   "markov_chain_view_copy_matrix_button": "Copiar Matriz de Transición",
   "matrix_squared_view_title": "Influencia Indirecta Normalizada (M²)",
   "matrix_squared_view_from_to": "Origen \\ Destino",
+    "markov_chain_view_export_matrix_button": "Exportar matriz de transición",
+    "@markov_chain_view_export_matrix_button": {
+      "description": "Etiqueta para exportar la matriz de transición a un archivo"
+    },
   "participant_stats_view_subtitle": "{messageCount} mensajes, {multimediaCount} archivos multimedia",
   "participant_stats_view_most_common_words": "Palabras más Comunes",
   "participant_stats_view_most_common_emojis": "Emojis más Comunes",
@@ -128,4 +132,69 @@
   "log_empty": "(vacío)",
   "info_wrapper_info_button": "Info",
   "export_button_label": "Exportar"
+  ,
+  "export_csv": "Exportar como CSV",
+  "@export_csv": {
+    "description": "Etiqueta para exportar datos como CSV"
+  },
+  "export_json": "Exportar como JSON",
+  "@export_json": {
+    "description": "Etiqueta para exportar datos como JSON"
+  },
+  "export_yaml": "Exportar como YAML",
+  "@export_yaml": {
+    "description": "Etiqueta para exportar datos como YAML"
+  },
+  "export_toon": "Exportar como TOON",
+  "@export_toon": {
+    "description": "Etiqueta para exportar datos en formato TOON"
+  },
+  "export_image": "Exportar Imagen",
+  "@export_image": {
+    "description": "Etiqueta para exportar el análisis como imagen"
+  }
+  ,
+  "export_exported_to": "Exportado a: {path}",
+  "@export_exported_to": {
+    "description": "Mensaje mostrado cuando un archivo es exportado con su ruta",
+    "placeholders": {
+      "path": {}
+    }
+  },
+  "export_saved_image": "Imagen guardada en: {path}",
+  "@export_saved_image": {
+    "description": "Mensaje mostrado cuando se guarda una imagen",
+    "placeholders": {
+      "path": {}
+    }
+  },
+  "export_error_no_directory": "No se pudo encontrar un directorio adecuado para guardar el archivo.",
+  "@export_error_no_directory": {
+    "description": "Mensaje de error cuando no hay directorio disponible para guardar archivos"
+  },
+  "export_error_exporting": "Error al exportar: {error}",
+  "@export_error_exporting": {
+    "description": "Mensaje de error genérico de exportación",
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "export_no_data_provided": "No se proporcionaron datos estructurados para exportar.",
+  "@export_no_data_provided": {
+    "description": "Mensaje mostrado cuando el usuario intenta exportar sin datos estructurados"
+  }
+  ,
+  "open_folder_action": "Abrir carpeta",
+  "@open_folder_action": {
+    "description": "Etiqueta para la acción de abrir la carpeta que contiene el archivo exportado"
+  },
+  "share_message_analysis": "¡Mira mi análisis de chat!",
+  "@share_message_analysis": {
+    "description": "Mensaje por defecto para compartir cuando se exporta una imagen"
+  },
+  "share_exported_text": "Exportado {file}",
+  "@share_exported_text": {
+    "description": "Texto para compartir cuando se exporta un archivo",
+    "placeholders": { "file": {} }
+  }
 }

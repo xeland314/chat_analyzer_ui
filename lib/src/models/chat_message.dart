@@ -11,4 +11,13 @@ class ChatMessage {
     required this.dateTime,
     required this.sentimentScore,
   });
+
+  Map<String, dynamic> toMap() => {
+        'author': author,
+        'content': content,
+        'dateTime': dateTime.toIso8601String(),
+        'sentimentScore': sentimentScore,
+      };
+
+  String toJson() => toMap().toString();
 }

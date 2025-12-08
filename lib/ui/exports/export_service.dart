@@ -1,7 +1,11 @@
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'dart:convert';
+import 'package:json2yaml/json2yaml.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:toon_format/toon_format.dart' as toon;
+import '../../l10n/app_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -92,32 +96,32 @@ class ExportService {
           final File file = File(filePath);
           await file.writeAsBytes(watermarkedPngBytes);
 
+            final loc = AppLocalizations.of(context)!;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(loc.export_saved_image(filePath)),
+                action:
+                    (Platform.isLinux || Platform.isWindows || Platform.isMacOS)
+                    ? SnackBarAction(
+                        label: loc.open_folder_action,
+                        onPressed: () {
+                          if (outputDirectory != null) {
+                            launchUrl(
+                              Uri.parse(
+                                'file://${outputDirectory.path.toString()}',
+                              ),
+                            );
+                          }
+                        },
+                      )
+                    : null,
+              ),
+            );
+        } else {
+          final loc = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Image saved to: $filePath'),
-              action:
-                  (Platform.isLinux || Platform.isWindows || Platform.isMacOS)
-                  ? SnackBarAction(
-                      label: 'Open Folder',
-                      onPressed: () {
-                        if (outputDirectory != null) {
-                          launchUrl(
-                            Uri.parse(
-                              'file://${outputDirectory.path.toString()}',
-                            ),
-                          );
-                        }
-                      },
-                    )
-                  : null,
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Could not find a suitable directory to save the image.',
-              ),
+              content: Text(loc.export_error_no_directory),
             ),
           );
         }
@@ -128,15 +132,158 @@ class ExportService {
         final File file = File(filePath);
         await file.writeAsBytes(watermarkedPngBytes);
 
+        final loc = AppLocalizations.of(context)!;
         await Share.shareXFiles([
           XFile(filePath),
-        ], text: 'Check out my chat analysis!');
+        ], text: loc.share_message_analysis);
       }
     } catch (e) {
       debugPrint('Error exporting widget: $e');
+      final loc = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Error exporting image: $e')));
+      ).showSnackBar(SnackBar(content: Text(loc.export_error_exporting(e.toString()))));
+    }
+  }
+
+  /// Export structured data (ChatAnalysis) to the requested format and
+  /// save/share it. Supported formats: csv, json, yaml, toon
+  static Future<void> exportData(
+    Map<String, dynamic> data,
+    String format,
+    String fileNameWithoutExt,
+    BuildContext context,
+  ) async {
+    try {
+      final formatLower = format.toLowerCase();
+      String content;
+      String ext = formatLower;
+
+      if (formatLower == 'json') {
+        content = const JsonEncoder.withIndent('  ').convert(data);
+        ext = 'json';
+      } else if (formatLower == 'yaml') {
+        // json2yaml converts a decoded JSON structure to YAML
+        content = json2yaml(data);
+        ext = 'yaml';
+      } else if (formatLower == 'csv') {
+        // For CSV we export the messages list (if present)
+        final messages = data['allMessagesChronological'] as List<dynamic>?;
+        if (messages == null) {
+          content = '';
+        } else {
+          final buffer = StringBuffer();
+          buffer.writeln('author,dateTime,content,sentimentScore');
+          for (final m in messages) {
+            final author = (m['author'] ?? '').toString().replaceAll('"', '""');
+            final date = (m['dateTime'] ?? '').toString();
+            final contentField = (m['content'] ?? '').toString().replaceAll('"', '""');
+            final sentiment = (m['sentimentScore'] ?? '').toString();
+            // Wrap content in quotes to preserve commas/newlines
+            buffer.writeln('"$author","$date","$contentField",$sentiment');
+          }
+          content = buffer.toString();
+          ext = 'csv';
+        }
+      } else if (formatLower == 'toon') {
+        // Use the official toon-dart encoder if available. Fall back to YAML
+        // serialization wrapped in a minimal TOON header if encoding fails.
+        try {
+          content = toon.encode(data);
+          ext = 'toon';
+        } catch (e) {
+          final yamlBody = json2yaml(data);
+          content = 'TOON v1\n---\n' + yamlBody;
+          ext = 'toon';
+        }
+      } else {
+        content = const JsonEncoder.withIndent('  ').convert(data);
+        ext = 'json';
+      }
+
+      final bytes = utf8.encode(content);
+
+      // Save to Downloads on desktop, or temp + share on mobile
+      if (kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+        final outputDirectory = await getDownloadsDirectory();
+        final dir = outputDirectory ?? await getTemporaryDirectory();
+        final path = '${dir.path}/$fileNameWithoutExt.$ext';
+        final file = File(path);
+        await file.writeAsBytes(bytes);
+
+        final loc = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(loc.export_exported_to(path))),
+        );
+      } else {
+        final dir = await getTemporaryDirectory();
+        final path = '${dir.path}/$fileNameWithoutExt.$ext';
+        final file = File(path);
+        await file.writeAsBytes(bytes);
+
+        final loc = AppLocalizations.of(context)!;
+        await Share.shareXFiles([XFile(path)], text: loc.share_exported_text('$fileNameWithoutExt.$ext'));
+      }
+    } catch (e) {
+      debugPrint('Error exporting data: $e');
+      final loc = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.export_error_exporting(e.toString()))));
+    }
+  }
+
+  /// Export a square transition matrix (Map<from, Map<to, value>>) to TSV or CSV.
+  /// Saves to Downloads on desktop or shares on mobile. Uses localization for messages.
+  static Future<void> exportMatrix(
+    Map<String, Map<String, double>> matrix,
+    String fileNameWithoutExt,
+    BuildContext context, {
+    String delimiter = '\t',
+  }) async {
+    try {
+      final loc = AppLocalizations.of(context)!;
+      final participants = matrix.keys.toList()..sort();
+
+      final buffer = StringBuffer();
+      // Header
+      buffer.write('${loc.markov_chain_view_from_to}$delimiter');
+      buffer.writeln(participants.join(delimiter));
+
+      for (final p1 in participants) {
+        buffer.write('$p1$delimiter');
+        for (final p2 in participants) {
+          final val = matrix[p1]?[p2] ?? 0.0;
+          buffer.write(val.toStringAsFixed(3));
+          buffer.write(delimiter);
+        }
+        buffer.writeln();
+      }
+
+      final content = buffer.toString();
+      final bytes = utf8.encode(content);
+
+      final ext = delimiter == '\t' ? 'tsv' : 'csv';
+
+      if (kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+        final outputDirectory = await getDownloadsDirectory();
+        final dir = outputDirectory ?? await getTemporaryDirectory();
+        final path = '${dir.path}/$fileNameWithoutExt.$ext';
+        final file = File(path);
+        await file.writeAsBytes(bytes);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(loc.export_exported_to(path))),
+        );
+      } else {
+        final dir = await getTemporaryDirectory();
+        final path = '${dir.path}/$fileNameWithoutExt.$ext';
+        final file = File(path);
+        await file.writeAsBytes(bytes);
+        final loc = AppLocalizations.of(context)!;
+        await Share.shareXFiles([XFile(path)], text: loc.share_exported_text('$fileNameWithoutExt.$ext'));
+      }
+    } catch (e) {
+      debugPrint('Error exporting matrix: $e');
+      final loc = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.export_error_exporting(e.toString()))));
     }
   }
 }

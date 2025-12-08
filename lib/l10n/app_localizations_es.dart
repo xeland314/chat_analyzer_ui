@@ -218,6 +218,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get markov_chain_view_copy_matrix_button => 'Copiar Matriz de Transición';
 
   @override
+  String get markov_chain_view_export_matrix_button => 'Exportar matriz de transición';
+
+  @override
   String get matrix_squared_view_title => 'Influencia Indirecta Normalizada (M²)';
 
   @override
@@ -427,4 +430,51 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get export_button_label => 'Exportar';
+
+  @override
+  String get export_csv => 'Exportar como CSV';
+
+  @override
+  String get export_json => 'Exportar como JSON';
+
+  @override
+  String get export_yaml => 'Exportar como YAML';
+
+  @override
+  String get export_toon => 'Exportar como TOON';
+
+  @override
+  String get export_image => 'Exportar Imagen';
+
+  @override
+  String export_exported_to(Object path) {
+    return 'Exportado a: $path';
+  }
+
+  @override
+  String export_saved_image(Object path) {
+    return 'Imagen guardada en: $path';
+  }
+
+  @override
+  String get export_error_no_directory => 'No se pudo encontrar un directorio adecuado para guardar el archivo.';
+
+  @override
+  String export_error_exporting(Object error) {
+    return 'Error al exportar: $error';
+  }
+
+  @override
+  String get export_no_data_provided => 'No se proporcionaron datos estructurados para exportar.';
+
+  @override
+  String get open_folder_action => 'Abrir carpeta';
+
+  @override
+  String get share_message_analysis => '¡Mira mi análisis de chat!';
+
+  @override
+  String share_exported_text(Object file) {
+    return 'Exportado $file';
+  }
 }

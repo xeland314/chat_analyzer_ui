@@ -497,6 +497,12 @@ abstract class AppLocalizations {
   /// **'Copy Transition Matrix'**
   String get markov_chain_view_copy_matrix_button;
 
+  /// Label for exporting the transition matrix to a file
+  ///
+  /// In en, this message translates to:
+  /// **'Export Transition Matrix'**
+  String get markov_chain_view_export_matrix_button;
+
   /// No description provided for @matrix_squared_view_title.
   ///
   /// In en, this message translates to:
@@ -862,6 +868,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Export'**
   String get export_button_label;
+
+  /// Label for exporting data as CSV
+  ///
+  /// In en, this message translates to:
+  /// **'Export as CSV'**
+  String get export_csv;
+
+  /// Label for exporting data as JSON
+  ///
+  /// In en, this message translates to:
+  /// **'Export as JSON'**
+  String get export_json;
+
+  /// Label for exporting data as YAML
+  ///
+  /// In en, this message translates to:
+  /// **'Export as YAML'**
+  String get export_yaml;
+
+  /// Label for exporting data as TOON format
+  ///
+  /// In en, this message translates to:
+  /// **'Export as TOON'**
+  String get export_toon;
+
+  /// Label for exporting the analysis as an image
+  ///
+  /// In en, this message translates to:
+  /// **'Export Image'**
+  String get export_image;
+
+  /// Message shown when a file is exported with its path
+  ///
+  /// In en, this message translates to:
+  /// **'Exported to: {path}'**
+  String export_exported_to(Object path);
+
+  /// Message shown when an image is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Image saved to: {path}'**
+  String export_saved_image(Object path);
+
+  /// Error message when no directory is available to save files
+  ///
+  /// In en, this message translates to:
+  /// **'Could not find a suitable directory to save the file.'**
+  String get export_error_no_directory;
+
+  /// Generic export error message
+  ///
+  /// In en, this message translates to:
+  /// **'Error exporting: {error}'**
+  String export_error_exporting(Object error);
+
+  /// Message shown when user tries to export without structured data
+  ///
+  /// In en, this message translates to:
+  /// **'No structured data provided to export.'**
+  String get export_no_data_provided;
+
+  /// Label for action to open the folder containing the exported file
+  ///
+  /// In en, this message translates to:
+  /// **'Open Folder'**
+  String get open_folder_action;
+
+  /// Default share message when sharing an exported image
+  ///
+  /// In en, this message translates to:
+  /// **'Check out my chat analysis!'**
+  String get share_message_analysis;
+
+  /// Text for share action when exporting data
+  ///
+  /// In en, this message translates to:
+  /// **'Exported {file}'**
+  String share_exported_text(Object file);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

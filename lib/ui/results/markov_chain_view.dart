@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../src/analysis/matrix_operations.dart';
 import '../chat/chat_avatar.dart';
+import '../exports/export_service.dart';
 import '../../l10n/app_localizations.dart';
 
 class MarkovChainView extends StatefulWidget {
@@ -54,6 +55,18 @@ class _MarkovChainViewState extends State<MarkovChainView> {
     );
   }
 
+  Future<void> _exportMatrixFile() async {
+    final transitionMatrix = normalizeMatrix(widget.replies);
+    // convert int counts to probabilities (double) map already produced by normalizeMatrix
+    final map = <String, Map<String, double>>{};
+    transitionMatrix.forEach((k, v) {
+      map[k] = v.map((key, value) => MapEntry(key, value.toDouble()));
+    });
+
+    // Use ExportService to save/share
+    await ExportService.exportMatrix(map, 'markov_transition_matrix', context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
@@ -96,13 +109,21 @@ class _MarkovChainViewState extends State<MarkovChainView> {
           ),
         ),
         const SizedBox(height: 16),
-        Align(
-          alignment: Alignment.center,
-          child: ElevatedButton.icon(
-            onPressed: _copyMatrixToClipboard,
-            icon: const Icon(Icons.copy),
-            label: Text(appLocalizations.markov_chain_view_copy_matrix_button),
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton.icon(
+              onPressed: _copyMatrixToClipboard,
+              icon: const Icon(Icons.copy),
+              label: Text(appLocalizations.markov_chain_view_copy_matrix_button),
+            ),
+            const SizedBox(width: 12),
+            ElevatedButton.icon(
+              onPressed: _exportMatrixFile,
+              icon: const Icon(Icons.file_download),
+              label: Text(appLocalizations.markov_chain_view_export_matrix_button),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
       ],

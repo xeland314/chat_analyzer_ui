@@ -67,6 +67,10 @@
   "markov_chain_view_title": "Markov Chain - Transition Probabilities",
   "markov_chain_view_from_to": "From \\ To",
   "markov_chain_view_copy_matrix_button": "Copy Transition Matrix",
+  "markov_chain_view_export_matrix_button": "Export Transition Matrix",
+  "@markov_chain_view_export_matrix_button": {
+    "description": "Label for exporting the transition matrix to a file"
+  },
   "matrix_squared_view_title": "Normalized Indirect Influence (M²)",
   "matrix_squared_view_from_to": "From \\ To",
   "participant_stats_view_subtitle": "{messageCount} messages, {multimediaCount} multimedia files",
@@ -128,4 +132,69 @@
   "log_empty": "(empty)",
   "info_wrapper_info_button": "Info",
   "export_button_label": "Export"
+  ,
+  "export_csv": "Export as CSV",
+  "@export_csv": {
+    "description": "Label for exporting data as CSV"
+  },
+  "export_json": "Export as JSON",
+  "@export_json": {
+    "description": "Label for exporting data as JSON"
+  },
+  "export_yaml": "Export as YAML",
+  "@export_yaml": {
+    "description": "Label for exporting data as YAML"
+  },
+  "export_toon": "Export as TOON",
+  "@export_toon": {
+    "description": "Label for exporting data as TOON format"
+  },
+  "export_image": "Export Image",
+  "@export_image": {
+    "description": "Label for exporting the analysis as an image"
+  }
+  ,
+  "export_exported_to": "Exported to: {path}",
+  "@export_exported_to": {
+    "description": "Message shown when a file is exported with its path",
+    "placeholders": {
+      "path": {}
+    }
+  },
+  "export_saved_image": "Image saved to: {path}",
+  "@export_saved_image": {
+    "description": "Message shown when an image is saved",
+    "placeholders": {
+      "path": {}
+    }
+  },
+  "export_error_no_directory": "Could not find a suitable directory to save the file.",
+  "@export_error_no_directory": {
+    "description": "Error message when no directory is available to save files"
+  },
+  "export_error_exporting": "Error exporting: {error}",
+  "@export_error_exporting": {
+    "description": "Generic export error message",
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "export_no_data_provided": "No structured data provided to export.",
+  "@export_no_data_provided": {
+    "description": "Message shown when user tries to export without structured data"
+  }
+  ,
+  "open_folder_action": "Open Folder",
+  "@open_folder_action": {
+    "description": "Label for action to open the folder containing the exported file"
+  },
+  "share_message_analysis": "Check out my chat analysis!",
+  "@share_message_analysis": {
+    "description": "Default share message when sharing an exported image"
+  },
+  "share_exported_text": "Exported {file}",
+  "@share_exported_text": {
+    "description": "Text for share action when exporting data",
+    "placeholders": { "file": {} }
+  }
 }

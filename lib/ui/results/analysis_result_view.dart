@@ -71,6 +71,7 @@ class AnalysisResultView extends StatelessWidget {
       floatingActionButton: ExportButton(
         repaintBoundaryKey: _analysisViewKey,
         fileName: appLocalizations.analysis_result_view_chat_analysis_report_filename,
+        dataMap: analysis.toMap(),
       ),
     );
   }
