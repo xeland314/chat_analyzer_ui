@@ -93,6 +93,7 @@ flutter:
     - assets/buy-me-a-coffee.png
     - assets/buy-me-a-cookie.png
     - assets/pixel-cat.png
+    - docs/AI_USAGE_AND_PROMPTS.md
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

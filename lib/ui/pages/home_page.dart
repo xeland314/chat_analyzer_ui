@@ -11,6 +11,7 @@ import '../home/analysis_view.dart';
 import '../common/log.dart';
 import '../home/display_options_dialog.dart';
 import '../../l10n/app_localizations.dart';
+import 'package:flutter/services.dart';
 
 // --- Helper ---
 Future<ChatAnalysis> _analyzeInIsolate(Map<String, String> args) async {
@@ -134,6 +135,13 @@ class _HomePageState extends State<HomePage> {
         actions: [
           if (_analysis != null)
             IconButton(
+              icon: const Icon(Icons.description),
+              onPressed: _openAiGuide,
+              tooltip: 'AI Guide',
+              color: Colors.white,
+            ),
+          if (_analysis != null)
+            IconButton(
               icon: const Icon(Icons.chat),
               onPressed: _viewFullChat,
               tooltip: appLocalizations.home_action_tooltip,
@@ -190,5 +198,46 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _openAiGuide() async {
+    try {
+      final content = await rootBundle.loadString('docs/AI_USAGE_AND_PROMPTS.md');
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('AI Guide'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: SingleChildScrollView(
+              child: SelectableText(content),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Copy all content to clipboard
+                Clipboard.setData(ClipboardData(text: content));
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('AI guide copied to clipboard')),
+                );
+              },
+              child: const Text('Copy'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not load AI guide: $e')),
+      );
+    }
   }
 }
