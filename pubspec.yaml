@@ -53,6 +53,7 @@ dependencies:
   toon_format:
     git:
       url: https://github.com/toon-format/toon-dart.git
+  shared_preferences: ^2.1.0
 
   # Internationalization support.
   flutter_localizations:
