@@ -24,6 +24,16 @@ void main() {
       expect(getInitials('John 123'), 'J1');
       expect(getInitials('Alice 7'), 'A7');
     });
+
+    test('maneja emojis y combinaciones', () {
+      expect(getInitials('🙂'), '🙂');
+      expect(getInitials('🙂🙂'), '🙂🙂');
+      expect(getInitials('🙂 John'), '🙂J');
+      expect(getInitials('John 🙂'), '🙂J');
+      expect(getInitials('1234🙂'), '🙂4');
+      expect(getInitials('🙂1234'), '🙂4');
+      expect(getInitials(''), '');
+    });
   });
 
   group('colorForName', () {
