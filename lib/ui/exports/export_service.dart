@@ -109,9 +109,7 @@ class ExportService {
                       onPressed: () {
                         if (outputDirectory != null) {
                           launchUrl(
-                            Uri.parse(
-                              'file://${outputDirectory.path.toString()}',
-                            ),
+                            Uri.file(outputDirectory.path),
                           );
                         }
                       },
