@@ -57,7 +57,6 @@ class _ChatAnalyzerAppState extends State<ChatAnalyzerApp> {
   }
 
   Future<void> _readAndSetSharedText(String pathOrUri) async {
-    debugPrint('📂 _readAndSetSharedText: $pathOrUri');
     Log.add('📂 _readAndSetSharedText: $pathOrUri');
     try {
       final file = File(pathOrUri);
@@ -66,11 +65,9 @@ class _ChatAnalyzerAppState extends State<ChatAnalyzerApp> {
       if (fileExists) {
         // Copiamos a Documents
         final persistedFile = await _persistSharedFile(file);
-        debugPrint('✅ Copied file to: ${persistedFile.path}');
         Log.add('✅ Copied file to: ${persistedFile.path}');
 
         final content = await persistedFile.readAsString();
-        debugPrint('📄 Content length: ${content.length}');
         Log.add('📄 Content length: ${content.length}');
 
         if (!mounted) return;
@@ -82,7 +79,6 @@ class _ChatAnalyzerAppState extends State<ChatAnalyzerApp> {
       Log.add('🤷 File does not exist, falling back to pathOrUri');
       setState(() => _sharedText = pathOrUri);
     } catch (e) {
-      debugPrint('❌ _readAndSetSharedText error: $e');
       Log.add('❌ _readAndSetSharedText error: $e');
       setState(() => _sharedText = pathOrUri);
     }
@@ -94,7 +90,7 @@ class _ChatAnalyzerAppState extends State<ChatAnalyzerApp> {
     Log.add('🚀 App initState');
 
     _locale =
-        WidgetsBinding.instance.window.locale; // Initialize with system locale
+        PlatformDispatcher.instance.locale; // Initialize with system locale
 
     if (defaultTargetPlatform != TargetPlatform.android &&
         defaultTargetPlatform != TargetPlatform.iOS) {

@@ -359,7 +359,7 @@ packages:
     source: hosted
     version: "0.7.2"
   json2yaml:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: json2yaml
       sha256: da94630fbc56079426fdd167ae58373286f603371075b69bf46d848d63ba3e51

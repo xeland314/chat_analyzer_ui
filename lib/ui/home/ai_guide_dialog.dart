@@ -180,11 +180,15 @@ class _AiGuideDialogState extends State<AiGuideDialog> {
                       onPressed: () async {
                         // Create a TOON representation of the compact summary and copy it to clipboard
                         try {
+                          final messenger = ScaffoldMessenger.of(context);
+                          final navigator = Navigator.of(context);
                           final toonText = await ExportService.toToonString(compactForToon);
                           await Clipboard.setData(ClipboardData(text: toonText));
-                          Navigator.of(context).pop();
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('TOON copied to clipboard')));
+                          if (!mounted) return;
+                          navigator.pop();
+                          messenger.showSnackBar(const SnackBar(content: Text('TOON copied to clipboard')));
                         } catch (e) {
+                          if (!mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Copy failed: $e')));
                         }
                       },

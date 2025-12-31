@@ -56,7 +56,7 @@ class InfluencePodium extends StatelessWidget {
         Container(
           height: height,
           width: 60,
-          color: Colors.teal.withOpacity(0.5),
+          color: Colors.teal.withValues(alpha: 0.5),
         ),
       ],
     );

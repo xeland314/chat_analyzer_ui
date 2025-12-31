@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:chat_analyzer_ui/src/analysis/chat_parser_rust.dart';
 import 'package:chat_analyzer_ui/src/analysis/chat_parser.dart';
 import 'realistic_mock_message.dart';
@@ -31,7 +32,7 @@ void parseDart(String data) {
 }
 
 void main() async {
-  print('🔬 Iniciando Benchmark Científico...');
+  debugPrint('🔬 Iniciando Benchmark Científico...');
 
   // --- Configuración ---
   const warmupRuns = 5;
@@ -44,19 +45,19 @@ void main() async {
   final results = <String, List<int>>{'dart': [], 'rust': []};
 
   // --- Calentamiento (Warm-up) ---
-  print('\n🔥 Calentando los JIT y FFI ($warmupRuns ejecuciones)...');
+  debugPrint('\n🔥 Calentando los JIT y FFI ($warmupRuns ejecuciones)...');
   for (var i = 0; i < warmupRuns; i++) {
     parseDart(testData);
     parseRust(testData);
   }
 
   // --- Forzar Recolección de Basura (GC) ---
-  print('🗑️ Forzando GC...');
+  debugPrint('🗑️ Forzando GC...');
   // Esto ayuda a reducir la influencia de la recolección de basura en las mediciones
   await Future.delayed(Duration(seconds: 2));
 
   // --- Mediciones (Alternadas para evitar sesgos) ---
-  print('\n⏱️ Midiendo ($measurementRuns ejecuciones por parser)...');
+  debugPrint('\n⏱️ Midiendo ($measurementRuns ejecuciones por parser)...');
   for (var i = 0; i < measurementRuns; i++) {
     // Dart Measurement
     final sw1 = Stopwatch()..start();
@@ -78,10 +79,10 @@ void main() async {
 
     stdout.write('  Run ${i + 1}/$measurementRuns completada...\r');
   }
-  print('\n✅ Mediciones completadas.');
+  debugPrint('\n✅ Mediciones completadas.');
 
   // --- Análisis Estadístico ---
-  print('\n\n=== RESULTADOS ESTADÍSTICOS ($messageCount Mensajes) ===');
+  debugPrint('\n\n=== RESULTADOS ESTADÍSTICOS ($messageCount Mensajes) ===');
 
   // Guardamos los resultados para la conclusión
   double dartMean = 0;
@@ -97,36 +98,36 @@ void main() async {
     if (name == 'dart') dartMean = mean;
     if (name == 'rust') rustMean = mean;
 
-    print('\n[${name.toUpperCase()} Parser]:');
-    print('  - Media (Mean): ${mean.toFixed(2)}ms');
-    print('  - Desv. Estándar (Std Dev): ${stdDev.toFixed(2)}ms');
-    print('  - Mínimo (Min): ${times.reduce(min)}ms');
-    print('  - Máximo (Max): ${times.reduce(max)}ms');
-    print(
+    debugPrint('\n[${name.toUpperCase()} Parser]:');
+    debugPrint('  - Media (Mean): ${mean.toFixed(2)}ms');
+    debugPrint('  - Desv. Estándar (Std Dev): ${stdDev.toFixed(2)}ms');
+    debugPrint('  - Mínimo (Min): ${times.reduce(min)}ms');
+    debugPrint('  - Máximo (Max): ${times.reduce(max)}ms');
+    debugPrint(
       '  - Coeficiente de Variación (CV): ${(stdDev / mean * 100).toFixed(1)}%',
     );
   });
 
   // --- Conclusión (T-test simplificado) ---
-  print('\n--- CONCLUSIÓN ---');
+  debugPrint('\n--- CONCLUSIÓN ---');
   final diff = (dartMean - rustMean).abs();
 
   // Criterio de "significancia" simplificado (adaptado del código original)
   const significanceThreshold = 50.0; // 50ms de diferencia
 
   if (diff < significanceThreshold) {
-    print('❓ Diferencia NO significativa (${diff.toFixed(1)}ms).');
-    print(
+    debugPrint('❓ Diferencia NO significativa (${diff.toFixed(1)}ms).');
+    debugPrint(
       'Ambos son estadísticamente equivalentes en rendimiento para esta carga de trabajo.',
     );
   } else if (dartMean < rustMean) {
-    print('🎯 Dart es significativamente más rápido.');
-    print(
+    debugPrint('🎯 Dart es significativamente más rápido.');
+    debugPrint(
       'Diferencia: ${diff.toFixed(1)}ms (${(diff / rustMean * 100).toFixed(1)}% más rápido que Rust).',
     );
   } else {
-    print('🦀 Rust es significativamente más rápido.');
-    print(
+    debugPrint('🦀 Rust es significativamente más rápido.');
+    debugPrint(
       'Diferencia: ${diff.toFixed(1)}ms (${(diff / dartMean * 100).toFixed(1)}% más rápido que Dart).',
     );
   }

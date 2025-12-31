@@ -5,11 +5,12 @@ import 'package:json2yaml/json2yaml.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:toon_format/toon_format.dart' as toon;
-import '../../l10n/app_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../l10n/app_localizations.dart';
+import '../common/log.dart';
 
 class ExportService {
   static Future<void> exportAndShareWidget(
@@ -18,6 +19,8 @@ class ExportService {
     String fileName,
     BuildContext context,
   ) async {
+    final loc = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
     try {
       final RenderRepaintBoundary boundary =
           repaintBoundaryKey.currentContext!.findRenderObject()
@@ -42,7 +45,7 @@ class ExportService {
         text: TextSpan(
           text: watermarkText,
           style: TextStyle(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             fontSize:
                 originalImage.width *
                 0.03, // Adjust font size based on image width
@@ -96,53 +99,50 @@ class ExportService {
           final File file = File(filePath);
           await file.writeAsBytes(watermarkedPngBytes);
 
-            final loc = AppLocalizations.of(context)!;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(loc.export_saved_image(filePath)),
-                action:
-                    (Platform.isLinux || Platform.isWindows || Platform.isMacOS)
-                    ? SnackBarAction(
-                        label: loc.open_folder_action,
-                        onPressed: () {
-                          if (outputDirectory != null) {
-                            launchUrl(
-                              Uri.parse(
-                                'file://${outputDirectory.path.toString()}',
-                              ),
-                            );
-                          }
-                        },
-                      )
-                    : null,
-              ),
-            );
-        } else {
-          final loc = AppLocalizations.of(context)!;
-          ScaffoldMessenger.of(context).showSnackBar(
+          messenger.showSnackBar(
             SnackBar(
-              content: Text(loc.export_error_no_directory),
+              content: Text(loc.export_saved_image(filePath)),
+              action:
+                  (Platform.isLinux || Platform.isWindows || Platform.isMacOS)
+                  ? SnackBarAction(
+                      label: loc.open_folder_action,
+                      onPressed: () {
+                        if (outputDirectory != null) {
+                          launchUrl(
+                            Uri.parse(
+                              'file://${outputDirectory.path.toString()}',
+                            ),
+                          );
+                        }
+                      },
+                    )
+                  : null,
             ),
+          );
+        } else {
+          messenger.showSnackBar(
+            SnackBar(content: Text(loc.export_error_no_directory)),
           );
         }
       } else {
         // For mobile, use share_plus
         final directory = (await getTemporaryDirectory()).path;
-        final filePath = '${directory}/$fileName.png';
+        final filePath = '$directory/$fileName.png';
         final File file = File(filePath);
         await file.writeAsBytes(watermarkedPngBytes);
 
-        final loc = AppLocalizations.of(context)!;
-        await Share.shareXFiles([
-          XFile(filePath),
-        ], text: loc.share_message_analysis);
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [XFile(filePath)],
+            text: loc.share_message_analysis,
+          ),
+        );
       }
     } catch (e) {
-      debugPrint('Error exporting widget: $e');
-      final loc = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(loc.export_error_exporting(e.toString()))));
+      Log.add('Error exporting widget: $e');
+      messenger.showSnackBar(
+        SnackBar(content: Text(loc.export_error_exporting(e.toString()))),
+      );
     }
   }
 
@@ -154,6 +154,8 @@ class ExportService {
     String fileNameWithoutExt,
     BuildContext context,
   ) async {
+    final loc = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
     try {
       final formatLower = format.toLowerCase();
       String content;
@@ -177,7 +179,10 @@ class ExportService {
           for (final m in messages) {
             final author = (m['author'] ?? '').toString().replaceAll('"', '""');
             final date = (m['dateTime'] ?? '').toString();
-            final contentField = (m['content'] ?? '').toString().replaceAll('"', '""');
+            final contentField = (m['content'] ?? '').toString().replaceAll(
+              '"',
+              '""',
+            );
             final sentiment = (m['sentimentScore'] ?? '').toString();
             // Wrap content in quotes to preserve commas/newlines
             buffer.writeln('"$author","$date","$contentField",$sentiment');
@@ -193,7 +198,7 @@ class ExportService {
           ext = 'toon';
         } catch (e) {
           final yamlBody = json2yaml(data);
-          content = 'TOON v1\n---\n' + yamlBody;
+          content = 'TOON v1\n---\n$yamlBody';
           ext = 'toon';
         }
       } else {
@@ -204,15 +209,17 @@ class ExportService {
       final bytes = utf8.encode(content);
 
       // Save to Downloads on desktop, or temp + share on mobile
-      if (kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+      if (kIsWeb ||
+          Platform.isLinux ||
+          Platform.isWindows ||
+          Platform.isMacOS) {
         final outputDirectory = await getDownloadsDirectory();
         final dir = outputDirectory ?? await getTemporaryDirectory();
         final path = '${dir.path}/$fileNameWithoutExt.$ext';
         final file = File(path);
         await file.writeAsBytes(bytes);
 
-        final loc = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
+        messenger.showSnackBar(
           SnackBar(content: Text(loc.export_exported_to(path))),
         );
       } else {
@@ -221,13 +228,18 @@ class ExportService {
         final file = File(path);
         await file.writeAsBytes(bytes);
 
-        final loc = AppLocalizations.of(context)!;
-        await Share.shareXFiles([XFile(path)], text: loc.share_exported_text('$fileNameWithoutExt.$ext'));
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [XFile(path)],
+            text: loc.share_exported_text('$fileNameWithoutExt.$ext'),
+          ),
+        );
       }
     } catch (e) {
-      debugPrint('Error exporting data: $e');
-      final loc = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.export_error_exporting(e.toString()))));
+      Log.add('Error exporting data: $e');
+      messenger.showSnackBar(
+        SnackBar(content: Text(loc.export_error_exporting(e.toString()))),
+      );
     }
   }
 
@@ -240,7 +252,7 @@ class ExportService {
     } catch (e) {
       // Fallback: wrap YAML body with a simple TOON header
       final yamlBody = json2yaml(data);
-      return 'TOON v1\n---\n' + yamlBody;
+      return 'TOON v1\n---\n$yamlBody';
     }
   }
 
@@ -252,8 +264,9 @@ class ExportService {
     BuildContext context, {
     String delimiter = '\t',
   }) async {
+    final loc = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
     try {
-      final loc = AppLocalizations.of(context)!;
       final participants = matrix.keys.toList()..sort();
 
       final buffer = StringBuffer();
@@ -276,13 +289,16 @@ class ExportService {
 
       final ext = delimiter == '\t' ? 'tsv' : 'csv';
 
-      if (kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+      if (kIsWeb ||
+          Platform.isLinux ||
+          Platform.isWindows ||
+          Platform.isMacOS) {
         final outputDirectory = await getDownloadsDirectory();
         final dir = outputDirectory ?? await getTemporaryDirectory();
         final path = '${dir.path}/$fileNameWithoutExt.$ext';
         final file = File(path);
         await file.writeAsBytes(bytes);
-        ScaffoldMessenger.of(context).showSnackBar(
+        messenger.showSnackBar(
           SnackBar(content: Text(loc.export_exported_to(path))),
         );
       } else {
@@ -290,13 +306,19 @@ class ExportService {
         final path = '${dir.path}/$fileNameWithoutExt.$ext';
         final file = File(path);
         await file.writeAsBytes(bytes);
-        final loc = AppLocalizations.of(context)!;
-        await Share.shareXFiles([XFile(path)], text: loc.share_exported_text('$fileNameWithoutExt.$ext'));
+        await SharePlus.instance.share(
+          ShareParams(
+            text: loc.share_exported_text('$fileNameWithoutExt.$ext'),
+
+            files: [XFile(path)],
+          ),
+        );
       }
     } catch (e) {
-      debugPrint('Error exporting matrix: $e');
-      final loc = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.export_error_exporting(e.toString()))));
+      Log.add('Error exporting matrix: $e');
+      messenger.showSnackBar(
+        SnackBar(content: Text(loc.export_error_exporting(e.toString()))),
+      );
     }
   }
 }

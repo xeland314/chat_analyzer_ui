@@ -24,7 +24,7 @@ class ExportButton extends StatelessWidget {
       onPressed: () async {
         // Quick action: export as TOON by default if we have data
         if (dataMap != null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.export_button_label + ' — ' + loc.export_toon)));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${loc.export_button_label} — ${loc.export_toon}')));
           await ExportService.exportData(dataMap!, 'toon', fileName, context);
           return;
         }

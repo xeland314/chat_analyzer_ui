@@ -121,7 +121,7 @@ class _InteractiveNetworkGraphState extends State<InteractiveNetworkGraph> {
                         if (from == participant || to == participant) {
                           _edgeColors[key] = Colors.teal;
                         } else {
-                          _edgeColors[key] = Colors.grey.withOpacity(0.2);
+                          _edgeColors[key] = Colors.grey.withValues(alpha: 0.2);
                         }
                       }
                     }

@@ -11,8 +11,6 @@ class TopBrokersCards extends StatelessWidget {
   Map<String, double> _calculateBrokerScores() {
     // La función calculateBetweennessCentrality() devuelve un mapa de String -> double
     final scores = calculateBetweennessCentrality(replies);
-    debugPrint('Broker Scores: $scores'); // Mantener para depuración
-
     return scores;
   }
 
@@ -50,7 +48,7 @@ class TopBrokersCards extends StatelessWidget {
 
   Widget _buildNoBrokersMessage(BuildContext context, AppLocalizations appLocalizations) {
     return Card(
-      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+      color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(

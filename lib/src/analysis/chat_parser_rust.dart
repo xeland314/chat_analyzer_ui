@@ -120,11 +120,8 @@ class ChatParserFFI {
           .asFunction();
 
       _ffiAvailable = true;
-      // print('✅ FFI library loaded successfully for ${Platform.operatingSystem}');
     } catch (e) {
       // Si falla, usar el parser de Dart como fallback
-      // print('⚠️ FFI not available: $e');
-      // print('📱 Using Dart parser as fallback');
       _dartParser = ChatParserOptimized();
       _ffiAvailable = false;
     }
@@ -136,7 +133,6 @@ class ChatParserFFI {
       return _parseWithFFI(content);
     } else if (_dartParser != null) {
       // Usar el parser de Dart como fallback
-      // print('🐌 Parsing with Dart (slower)');
       return _dartParser!.parse(content);
     } else {
       throw StateError('No parser available (neither FFI nor Dart)');

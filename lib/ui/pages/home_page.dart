@@ -11,7 +11,6 @@ import '../home/analysis_view.dart';
 import '../common/log.dart';
 import '../home/display_options_dialog.dart';
 import '../../l10n/app_localizations.dart';
-import 'package:flutter/services.dart';
 import '../home/ai_guide_dialog.dart';
 
 // --- Helper ---
@@ -185,7 +184,7 @@ class _HomePageState extends State<HomePage> {
         onDragExited: (details) => setState(() => _isDragging = false),
         child: Container(
           color: _isDragging
-              ? Colors.amber.withOpacity(0.5)
+              ? Colors.amber.withValues(alpha: 0.5)
               : Colors.transparent,
           child: Center(
             child: AnalysisView(

@@ -34,13 +34,13 @@ class KeyRelationships extends StatelessWidget {
         final p1 = participants[i];
         final p2 = participants[j];
 
-        final p1_to_p2 = replies[p1]?[p2] ?? 0;
-        final p2_to_p1 = replies[p2]?[p1] ?? 0;
+        final p1ToP2 = replies[p1]?[p2] ?? 0;
+        final p2ToP1 = replies[p2]?[p1] ?? 0;
 
-        if (p1_to_p2 == 0 && p2_to_p1 == 0) continue;
+        if (p1ToP2 == 0 && p2ToP1 == 0) continue;
 
-        final total = p1_to_p2 + p2_to_p1;
-        final reciprocity = (p1_to_p2 < p2_to_p1 ? p1_to_p2 : p2_to_p1) / (p1_to_p2 > p2_to_p1 ? p1_to_p2 : p2_to_p1);
+        final total = p1ToP2 + p2ToP1;
+        final reciprocity = (p1ToP2 < p2ToP1 ? p1ToP2 : p2ToP1) / (p1ToP2 > p2ToP1 ? p1ToP2 : p2ToP1);
 
         if (reciprocity > 0.8 && total > 10) {
           relationships.add(_Relationship(p1, p2, appLocalizations.key_relationships_strong_pair, reciprocity));
