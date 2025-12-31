@@ -486,4 +486,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String share_exported_text(Object file) {
     return 'Exported $file';
   }
+
+  @override
+  String get unsupported_file_title => 'Unsupported File';
+
+  @override
+  String get unsupported_file_message => 'The selected file is not a valid WhatsApp chat export. Please make sure you are using a WhatsApp chat text export in the correct format.';
+
+  @override
+  String get unsupported_file_action => 'OK';
 }

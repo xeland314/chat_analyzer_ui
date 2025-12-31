@@ -199,5 +199,17 @@
   "@share_exported_text": {
     "description": "Texto para compartir cuando se exporta un archivo",
     "placeholders": { "file": {} }
+  },
+  "unsupported_file_title": "Archivo no soportado",
+  "@unsupported_file_title": {
+    "description": "Título del diálogo cuando el usuario intenta abrir un archivo no soportado"
+  },
+  "unsupported_file_message": "El archivo seleccionado no es una exportación válida de WhatsApp. Asegúrate de usar una exportación de chat de WhatsApp en el formato correcto.",
+  "@unsupported_file_message": {
+    "description": "Mensaje explicando que el archivo no es un chat válido de WhatsApp"
+  },
+  "unsupported_file_action": "OK",
+  "@unsupported_file_action": {
+    "description": "Botón para cerrar el diálogo de archivo no soportado"
   }
 }

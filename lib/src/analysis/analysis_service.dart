@@ -21,6 +21,23 @@ class AnalysisService {
     return analysis;
   }
 
+  /// Validates if the provided content is a valid WhatsApp chat.
+  /// Returns true if the chat has at least one participant with messages.
+  bool isValidWhatsAppChat(String chatContent) {
+    if (chatContent.trim().isEmpty) {
+      return false;
+    }
+
+    try {
+      final analysis = _parser.parse(chatContent);
+      // Valid if we have at least one participant with at least one message
+      return analysis.participants.isNotEmpty &&
+          analysis.participants.any((p) => p.messages.isNotEmpty);
+    } catch (e) {
+      return false;
+    }
+  }
+
   /// Clears the analysis cache.
   void clearCache() {
     _cache.clear();

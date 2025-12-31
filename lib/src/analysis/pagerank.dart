@@ -125,6 +125,12 @@ Map<String, double> calculateWeightedPageRank(
   }
 
   // Normalizar
+  if (pageRanks.isEmpty) {
+    return {};
+  }
   final sum = pageRanks.values.reduce((a, b) => a + b);
+  if (sum == 0) {
+    return pageRanks;
+  }
   return {for (var e in pageRanks.entries) e.key: e.value / sum};
 }

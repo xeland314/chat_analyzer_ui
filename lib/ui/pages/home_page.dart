@@ -64,15 +64,46 @@ class _HomePageState extends State<HomePage> {
       final id = const Uuid().v4();
       final analysis = await compute(_analyzeInIsolate, {'content': content, 'id': id});
       if (!mounted) return;
+
+      // Validate if the analysis has any meaningful data
+      if (analysis.participants.isEmpty ||
+          !analysis.participants.any((p) => p.messages.isNotEmpty)) {
+        if (!mounted) return;
+        _showUnsupportedFileDialog();
+        Log.add("Unsupported or invalid WhatsApp chat file");
+        setState(() => _isLoading = false);
+        return;
+      }
+
       setState(() => _analysis = analysis);
       Log.add("Analysis completed successfully");
     } catch (e) {
       if (!mounted) return;
+      _showUnsupportedFileDialog();
       Log.add("Error processing content: $e");
     }
 
     if (!mounted) return;
     setState(() => _isLoading = false);
+  }
+
+  void _showUnsupportedFileDialog() {
+    final appLocalizations = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(appLocalizations.unsupported_file_title),
+        content: Text(
+          appLocalizations.unsupported_file_message,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(appLocalizations.unsupported_file_action),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _pickAndAnalyzeFile() async {

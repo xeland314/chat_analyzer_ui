@@ -964,6 +964,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Exported {file}'**
   String share_exported_text(Object file);
+
+  /// Title for the dialog when user tries to open an unsupported file format
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported File'**
+  String get unsupported_file_title;
+
+  /// Message explaining that the file is not a valid WhatsApp chat
+  ///
+  /// In en, this message translates to:
+  /// **'The selected file is not a valid WhatsApp chat export. Please make sure you are using a WhatsApp chat text export in the correct format.'**
+  String get unsupported_file_message;
+
+  /// Button label to close the unsupported file dialog
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get unsupported_file_action;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

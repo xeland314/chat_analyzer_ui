@@ -199,5 +199,17 @@
   "@share_exported_text": {
     "description": "Text for share action when exporting data",
     "placeholders": { "file": {} }
+  },
+  "unsupported_file_title": "Unsupported File",
+  "@unsupported_file_title": {
+    "description": "Title for the dialog when user tries to open an unsupported file format"
+  },
+  "unsupported_file_message": "The selected file is not a valid WhatsApp chat export. Please make sure you are using a WhatsApp chat text export in the correct format.",
+  "@unsupported_file_message": {
+    "description": "Message explaining that the file is not a valid WhatsApp chat"
+  },
+  "unsupported_file_action": "OK",
+  "@unsupported_file_action": {
+    "description": "Button label to close the unsupported file dialog"
   }
 }
