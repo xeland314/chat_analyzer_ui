@@ -109,21 +109,24 @@ class _MarkovChainViewState extends State<MarkovChainView> {
           ),
         ),
         const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton.icon(
-              onPressed: _copyMatrixToClipboard,
-              icon: const Icon(Icons.copy),
-              label: Text(appLocalizations.markov_chain_view_copy_matrix_button),
-            ),
-            const SizedBox(width: 12),
-            ElevatedButton.icon(
-              onPressed: _exportMatrixFile,
-              icon: const Icon(Icons.file_download),
-              label: Text(appLocalizations.markov_chain_view_export_matrix_button),
-            ),
-          ],
+        Center(
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 12,
+            runSpacing: 12,
+            children: [
+              ElevatedButton.icon(
+                onPressed: _copyMatrixToClipboard,
+                icon: const Icon(Icons.copy),
+                label: Text(appLocalizations.markov_chain_view_copy_matrix_button),
+              ),
+              ElevatedButton.icon(
+                onPressed: _exportMatrixFile,
+                icon: const Icon(Icons.file_download),
+                label: Text(appLocalizations.markov_chain_view_export_matrix_button),
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 8),
       ],

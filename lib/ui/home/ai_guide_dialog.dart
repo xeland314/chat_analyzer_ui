@@ -174,7 +174,9 @@ class _AiGuideDialogState extends State<AiGuideDialog> {
                 const SizedBox(height: 6),
                 SelectableText(compactJson),
                 const SizedBox(height: 12),
-                Row(
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
                     ElevatedButton.icon(
                       onPressed: () async {
@@ -195,7 +197,6 @@ class _AiGuideDialogState extends State<AiGuideDialog> {
                       icon: const Icon(Icons.copy_all),
                       label: const Text('Copy as TOON'),
                     ),
-                    const SizedBox(width: 8),
                     OutlinedButton.icon(
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: compactJson));
