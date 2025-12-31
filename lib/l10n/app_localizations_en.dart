@@ -373,6 +373,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get interactive_network_graph_title => 'Communication Network';
 
   @override
+  String get network_size_mode_label => 'Avatar Size:';
+
+  @override
+  String get network_size_mode_influence => 'By Influence';
+
+  @override
+  String get network_size_mode_uniform => 'Uniform (20)';
+
+  @override
   String get key_relationships_title => 'Key Relationships';
 
   @override

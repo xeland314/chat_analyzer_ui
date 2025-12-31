@@ -767,6 +767,24 @@ abstract class AppLocalizations {
   /// **'Communication Network'**
   String get interactive_network_graph_title;
 
+  /// No description provided for @network_size_mode_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Avatar Size:'**
+  String get network_size_mode_label;
+
+  /// No description provided for @network_size_mode_influence.
+  ///
+  /// In en, this message translates to:
+  /// **'By Influence'**
+  String get network_size_mode_influence;
+
+  /// No description provided for @network_size_mode_uniform.
+  ///
+  /// In en, this message translates to:
+  /// **'Uniform (20)'**
+  String get network_size_mode_uniform;
+
   /// No description provided for @key_relationships_title.
   ///
   /// In en, this message translates to:
