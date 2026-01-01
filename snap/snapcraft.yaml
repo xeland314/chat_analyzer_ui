@@ -1,0 +1,37 @@
+name: chat-analyzer
+version: '1.0.0'
+summary: Analizador de chats - Chat Analyzer
+description: |
+  Herramienta de análisis avanzado para tus chats.
+  Soporta hardware antiguo con renderizado por software (llvmpipe).
+  Compatible con GPUs modernas y antiguas.
+
+base: core22
+confinement: strict
+grade: stable
+icon: snap/gui/io.xeland314.chat_analyzer_ui.png
+
+apps:
+  chat-analyzer:
+    command: usr/bin/chat_analyzer_ui
+    desktop: usr/share/applications/io.xeland314.chat_analyzer_ui.desktop
+    plugs:
+      - home
+      - opengl
+      - network
+      - gpu-support
+
+parts:
+  chat-analyzer:
+    plugin: flutter
+    flutter-target: linux
+    source: .
+    build-packages:
+      - libgl1-mesa-dev
+      - libxkbcommon-dev
+      - cmake
+      - ninja-build
+    stage-packages:
+      - libgl1-mesa-glx
+      - libxkbcommon0
+      - libglu1-mesa
