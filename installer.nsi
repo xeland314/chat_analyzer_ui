@@ -68,16 +68,40 @@ Section "Instalar"
   
   ; Crear desinstalador
   WriteUninstaller "$INSTDIR\uninstall.exe"
-  
-  ; Crear carpeta en Menú Inicio
-  CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
-  
-  ; Crear accesos directos en el menú Inicio
-  CreateShortcut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\chat_analyzer_ui.exe" "" "$INSTDIR\chat_analyzer_ui.exe" 0
-  CreateShortcut "$SMPROGRAMS\${PRODUCT_NAME}\Desinstalar.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  
-  ; Crear acceso directo en el escritorio
-  CreateShortcut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\chat_analyzer_ui.exe" "" "$INSTDIR\chat_analyzer_ui.exe" 0
+
+    ; Selección de carpeta del Menú Inicio usando StartMenu plugin
+    ; Si el usuario selecciona una carpeta se crearán los accesos ahí.
+    ; Si cancela o hay error, se usará la carpeta por defecto "$SMPROGRAMS\${PRODUCT_NAME}"
+    StartMenu::Select /autoadd "${PRODUCT_NAME}"
+    Pop $0
+    StrCmp $0 "success" 0 +6
+      Pop $1 ; carpeta seleccionada (subfolder)
+      StrCpy $2 $1 1 0
+      StrCmp $2 ">" 0 +4
+        ; Usuario marcó 'no shortcuts' -> no crear accesos
+        Goto _SKIP_SHORTCUTS
+      ; Construir ruta completa y crear carpeta
+      StrCpy $3 "$SMPROGRAMS\\$1"
+      CreateDirectory "$3"
+      CreateShortcut "$3\\${PRODUCT_NAME}.lnk" "$INSTDIR\\chat_analyzer_ui.exe" "" "$INSTDIR\\chat_analyzer_ui.exe" 0 SW_SHOWNORMAL "" "${PRODUCT_NAME}"
+      CreateShortcut "$3\\Desinstalar.lnk" "$INSTDIR\\uninstall.exe" "" "$INSTDIR\\uninstall.exe" 0 SW_SHOWNORMAL "" "Desinstalar ${PRODUCT_NAME}"
+      Goto _SHORTCUTS_DONE
+
+    ; No success (cancel or error) -> usar carpeta por defecto
+    CreateDirectory "$SMPROGRAMS\\${PRODUCT_NAME}"
+    CreateShortcut "$SMPROGRAMS\\${PRODUCT_NAME}\\${PRODUCT_NAME}.lnk" "$INSTDIR\\chat_analyzer_ui.exe" "" "$INSTDIR\\chat_analyzer_ui.exe" 0 SW_SHOWNORMAL "" "${PRODUCT_NAME}"
+    CreateShortcut "$SMPROGRAMS\\${PRODUCT_NAME}\\Desinstalar.lnk" "$INSTDIR\\uninstall.exe" "" "$INSTDIR\\uninstall.exe" 0 SW_SHOWNORMAL "" "Desinstalar ${PRODUCT_NAME}"
+
+    ; Crear acceso directo en el escritorio (usuario actual)
+    CreateShortcut "$DESKTOP\\${PRODUCT_NAME}.lnk" "$INSTDIR\\chat_analyzer_ui.exe" "" "$INSTDIR\\chat_analyzer_ui.exe" 0 SW_SHOWNORMAL "" "${PRODUCT_NAME}"
+
+    Goto _SHORTCUTS_DONE
+
+    _SKIP_SHORTCUTS:
+      ; El usuario solicitó no crear accesos en el menú
+      ; No hacemos nada
+
+    _SHORTCUTS_DONE:
   
   ; Registro de Windows
   WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\chat_analyzer_ui.exe"
