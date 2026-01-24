@@ -31,6 +31,7 @@ VIAddVersionKey OriginalFilename "ChatAnalyzer-Setup-v${PRODUCT_VERSION}.exe"
 
 ; Interfaz MUI
 !insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_LICENSE "LICENSE"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -59,6 +60,8 @@ Section "Instalar"
   
   ; Copiar el ejecutable
   File "build\windows\x64\runner\Release\chat_analyzer_ui.exe"
+  ; Incluir archivo de licencia en la instalación
+  File "LICENSE"
   
   ; Copiar archivos necesarios de Flutter (si existen)
   File /r /x "*.pdb" /x "*.lib" "build\windows\x64\runner\Release\*.*"

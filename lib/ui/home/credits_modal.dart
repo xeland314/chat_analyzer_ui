@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:url_launcher/url_launcher.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -140,6 +141,42 @@ class CreditsModal extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const PaymentButtons(),
+                          const SizedBox(height: 24),
+                          // Licencia
+                          Column(
+                            children: [
+                              Text(
+                                'Licencia: GNU GPL v3 © 2026 Christopher Villamarín',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                              ),
+                              const SizedBox(height: 8),
+                              TextButton(
+                                onPressed: () async {
+                                  final license = await rootBundle.loadString('LICENSE');
+                                  showDialog<void>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text('Licencia'),
+                                      content: SizedBox(
+                                        width: double.maxFinite,
+                                        child: SingleChildScrollView(
+                                          child: SelectableText(license),
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.of(context).pop(),
+                                          child: Text(appLocalizations.credits_modal_close_button),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                child: Text('Ver licencia'),
+                              ),
+                            ],
+                          ),
             ],
           ),
         ),
