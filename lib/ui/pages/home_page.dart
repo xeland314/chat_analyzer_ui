@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import '../../src/analysis/analysis_service.dart';
 import '../../src/models/chat_analysis.dart';
 import '../chat/chat_view_screen.dart';
@@ -228,7 +229,31 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+      floatingActionButton: _analysis == null
+          ? FloatingActionButton.extended(
+              onPressed: _loadSampleChat,
+              label: const Text('Probar chat de prueba'),
+              icon: const Icon(Icons.play_arrow),
+            )
+          : null,
     );
+  }
+
+  Future<void> _loadSampleChat() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final content = await rootBundle.loadString('assets/sample_test_chat.txt');
+      await _processChatContent(content);
+    } catch (e) {
+      Log.add('Error loading sample chat: $e');
+      if (mounted) {
+        _showUnsupportedFileDialog();
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   Future<void> _openAiGuide() async {
