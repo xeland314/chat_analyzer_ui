@@ -785,8 +785,8 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "7bbef26a6280f1bed4486b562d58550aaeea55d1"
-      url: "https://github.com/toon-format/toon-dart.git"
+      resolved-ref: "3aa8fe24e84bcfc37549e47764169da85cc2dba9"
+      url: "https://github.com/xeland314/toon-dart.git"
     source: git
     version: "0.1.0"
   typed_data:
