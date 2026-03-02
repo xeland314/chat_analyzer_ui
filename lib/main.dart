@@ -5,6 +5,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:path_provider/path_provider.dart';
 import 'src/utils/zip_utils.dart';
 import 'package:flutter/foundation.dart';
+import 'src/utils/zip_utils.dart';
 import 'ui/pages/home_page.dart';
 import 'ui/common/log.dart';
 import 'l10n/app_localizations.dart';
@@ -67,6 +68,36 @@ class _ChatAnalyzerAppState extends State<ChatAnalyzerApp> {
         // Copiamos a Documents
         final persistedFile = await _persistSharedFile(file);
         Log.add('✅ Copied file to: ${persistedFile.path}');
+        // If ZIP, extract first .txt inside with validation
+        final lower = persistedFile.path.toLowerCase();
+        if (lower.endsWith('.zip')) {
+          try {
+            final content = await extractFirstTxtFromZip(persistedFile);
+            Log.add('📄 Extracted .txt length: ${content.length}');
+            if (!mounted) return;
+            setState(() => _sharedText = content);
+            return;
+          } on ZipInvalidException catch (ze) {
+            Log.add('❌ Zip invalid: ${ze.message}');
+            if (mounted) {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('ZIP inválido'),
+                  content: Text(ze.message),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('OK'),
+                    )
+                  ],
+                ),
+              );
+            }
+            return;
+          }
+        }
+
         // If ZIP, extract first .txt inside with validation
         final lower = persistedFile.path.toLowerCase();
         if (lower.endsWith('.zip')) {

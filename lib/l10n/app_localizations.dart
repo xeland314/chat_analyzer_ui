@@ -128,7 +128,7 @@ abstract class AppLocalizations {
   /// No description provided for @initial_view_message_1.
   ///
   /// In en, this message translates to:
-  /// **'Drag and drop your .txt file here'**
+  /// **'Drag and drop your .txt or .zip file here'**
   String get initial_view_message_1;
 
   /// No description provided for @initial_view_message_2.
@@ -140,7 +140,7 @@ abstract class AppLocalizations {
   /// No description provided for @initial_view_message_3.
   ///
   /// In en, this message translates to:
-  /// **'Load chat file (.txt)'**
+  /// **'Load chat file (.txt, .zip)'**
   String get initial_view_message_3;
 
   /// No description provided for @initial_view_credits_button.
