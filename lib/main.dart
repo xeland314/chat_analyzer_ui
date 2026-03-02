@@ -98,36 +98,6 @@ class _ChatAnalyzerAppState extends State<ChatAnalyzerApp> {
           }
         }
 
-        // If ZIP, extract first .txt inside with validation
-        final lower = persistedFile.path.toLowerCase();
-        if (lower.endsWith('.zip')) {
-          try {
-            final content = await extractFirstTxtFromZip(persistedFile);
-            Log.add('📄 Extracted .txt length: ${content.length}');
-            if (!mounted) return;
-            setState(() => _sharedText = content);
-            return;
-          } on ZipInvalidException catch (ze) {
-            Log.add('❌ Zip invalid: ${ze.message}');
-            if (mounted) {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('ZIP inválido'),
-                  content: Text(ze.message),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('OK'),
-                    )
-                  ],
-                ),
-              );
-            }
-            return;
-          }
-        }
-
         final content = await persistedFile.readAsString();
         Log.add('📄 Content length: ${content.length}');
 
