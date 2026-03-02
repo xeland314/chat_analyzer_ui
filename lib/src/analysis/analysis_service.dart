@@ -1,8 +1,8 @@
 import '../models/chat_analysis.dart';
-import 'chat_parser_rust.dart';
+import 'chat_parser.dart';
 
 class AnalysisService {
-  final _parser = ChatParserFFI();
+  final _parser = ChatParserOptimized();
   final _cache = <String, ChatAnalysis>{};
 
   /// Processes the chat content, using a cached result if available.

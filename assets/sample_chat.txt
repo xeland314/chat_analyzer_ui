@@ -1,8 +1,0 @@
-14/7/24, 10:30 - Alice: Hola Bob, ¿cómo estás?
-14/7/24, 10:31 - Bob: ¡Hola Alice! Todo bien por aquí, ¿y tú? 😊
-14/7/24, 10:31 - Alice: Genial. Quería preguntarte sobre el proyecto.
-Es un proyecto de prueba.
-14/7/24, 10:32 - Bob: Claro, dime. El proyecto avanza bien.
-14/7/24, 10:33 - Alice: ¿Viste el último emoji que salió? 👽
-14/7/24, 10:33 - Alice: Es genial.
-14/7/24, 10:34 - Bob: Jajaja sí, es muy gracioso. 😂
