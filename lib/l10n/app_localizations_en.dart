@@ -24,13 +24,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get home_action_logs => 'View Logs';
 
   @override
-  String get initial_view_message_1 => 'Drag and drop your .txt file here';
+  String get initial_view_message_1 => 'Drag and drop your .txt or .zip file here';
 
   @override
   String get initial_view_message_2 => 'or';
 
   @override
-  String get initial_view_message_3 => 'Load chat file (.txt)';
+  String get initial_view_message_3 => 'Load chat file (.txt, .zip)';
 
   @override
   String get initial_view_credits_button => 'Credits';

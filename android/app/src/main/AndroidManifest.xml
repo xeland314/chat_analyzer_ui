@@ -35,12 +35,16 @@
                 <data android:scheme="content" />
                 <data android:scheme="file" />
                 <data android:mimeType="text/plain" />
+                <!-- Accept WhatsApp exported ZIPs -->
+                <data android:mimeType="application/zip" />
+                <data android:host="*" android:pathPattern=".*\\.zip" />
             </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="*/*" />
+                <data android:mimeType="application/zip" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

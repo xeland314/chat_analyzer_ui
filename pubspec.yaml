@@ -55,6 +55,7 @@ dependencies:
       url: https://github.com/xeland314/toon-dart.git
   json2yaml: ^3.0.0
   shared_preferences: ^2.1.0
+  archive: ^3.3.0
 
   # Internationalization support.
   flutter_localizations:
