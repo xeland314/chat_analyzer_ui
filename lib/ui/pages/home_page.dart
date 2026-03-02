@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import '../../src/utils/zip_utils.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -110,13 +111,25 @@ class _HomePageState extends State<HomePage> {
   Future<void> _pickAndAnalyzeFile() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['txt'],
+      allowedExtensions: ['txt', 'zip'],
     );
 
     if (result != null && result.files.single.path != null) {
-      final file = File(result.files.single.path!);
-      final content = await file.readAsString();
-      await _processChatContent(content);
+      final path = result.files.single.path!;
+      final lower = path.toLowerCase();
+      if (lower.endsWith('.zip')) {
+        try {
+          final content = await extractFirstTxtFromZip(File(path));
+          await _processChatContent(content);
+        } on ZipInvalidException catch (ze) {
+          Log.add('Invalid zip: ${ze.message}');
+          _showUnsupportedFileDialog();
+        }
+      } else {
+        final file = File(path);
+        final content = await file.readAsString();
+        await _processChatContent(content);
+      }
     }
   }
 
@@ -209,7 +222,19 @@ class _HomePageState extends State<HomePage> {
         onDragDone: (details) async {
           if (details.files.isNotEmpty) {
             final file = details.files.first;
-            await _processChatContent(await file.readAsString());
+            try {
+              final path = file.path;
+              if (path.isNotEmpty && path.toLowerCase().endsWith('.zip')) {
+                final content = await extractFirstTxtFromZip(File(path));
+                await _processChatContent(content);
+              } else {
+                final content = await file.readAsString();
+                await _processChatContent(content);
+              }
+            } on ZipInvalidException catch (ze) {
+              Log.add('Invalid zip on drop: ${ze.message}');
+              _showUnsupportedFileDialog();
+            }
           }
         },
         onDragEntered: (details) => setState(() => _isDragging = true),
