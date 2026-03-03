@@ -7,7 +7,8 @@ A cross-platform Flutter application to import, parse, and analyze chat logs (li
 ### 1. Data Input & Compatibility
 
 - **Cross-Platform:** Fully functional on Android, iOS, Linux, Windows, macOS, and Web.
-- **Flexible Import:** Load chat history `.txt` files using:
+- **Flexible Import:** Load chat history using:
+    - **Native Formats:** Support for `.txt` files and **`.zip` archives** (automatically extracts the first `.txt` file found).
     - **File Picker:** Select the file from your device's storage.
     - **Drag-and-Drop:** Drag the file directly onto the app window (on desktop platforms).
     - **Share Intent:** Open chat files directly from other apps (e.g., WhatsApp) on mobile.
